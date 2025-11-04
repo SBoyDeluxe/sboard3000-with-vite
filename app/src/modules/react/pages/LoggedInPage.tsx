@@ -1,15 +1,15 @@
 import * as React from "react";
 import { ThemeValues } from "../../theme";
-import { State } from "../components/App";
+import type { State } from "../components/App";
 import { Background } from "../components/background";
 import { CreateProjectTab } from "../components/CreateProjectTab";
 import { Footer } from "../components/Footer";
-import { Header, HeaderProps } from "../components/Header";
+import { Header, type HeaderProps } from "../components/Header";
 import { InboxTab } from "../components/InboxTab";
 import { ThemeSelector } from "../components/ThemeSelector";
 import { themeContext } from "../context/ThemeContext";
 import { Button } from "../components/Button";
-import { MailboxStore, UserStore } from "../store/UserStore";
+import { UserStore } from "../store/UserStore";
 import { TabPage } from "../components/TabPage";
 import { ProjectsTab } from "../components/ProjectsTab";
 import { TabRow } from "../components/TabRow";

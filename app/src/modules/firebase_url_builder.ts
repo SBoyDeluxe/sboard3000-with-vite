@@ -1,5 +1,5 @@
 import { Project } from "./project";
-import { User,Developer,Manager,Client } from "./User";
+import { User,Developer,Client } from "./User";
 
 /**Handles making requests-objects {URL, HTTPOptions},that can be used with fetch-requests to 
  * the firebase database

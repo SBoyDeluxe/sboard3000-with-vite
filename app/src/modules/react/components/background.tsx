@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { themeContext } from '../context/ThemeContext';
-import { ClickHandler } from './App';
+import { type ClickHandler } from './App';
 import { useContext } from 'react';
 /** A react element serving as the backdrop of some other component
  * 

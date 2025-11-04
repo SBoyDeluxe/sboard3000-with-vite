@@ -1,5 +1,5 @@
 import { ThemeValues } from "../../theme";
-import { State } from "../components/App";
+import { type State } from "../components/App";
 import { Background } from "../components/background";
 import { Footer } from "../components/Footer";
 import { Header } from "../components/Header";

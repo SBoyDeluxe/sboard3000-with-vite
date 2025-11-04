@@ -1,10 +1,10 @@
-import { useState, ReactNode, ChangeEvent, FormEvent } from "react";
+import { useState, type ReactNode, type ChangeEvent, type FormEvent } from "react";
 import { TimeConstraints } from "../../Timeconstraints";
 import { Button } from "./Button";
-import { FieldSetOptions, Form } from "./Form";
+import { type FieldSetOptions, Form } from "./Form";
 import { Input } from "./Input";
-import { AddTaskElementProps, getKeysForList } from "./ProjectsTab";
-import { State } from "./App";
+import { type AddTaskElementProps, getKeysForList } from "./ProjectsTab";
+import type { State } from "./App";
 import { Developer } from "../../User";
 import { Details } from "./Details";
 

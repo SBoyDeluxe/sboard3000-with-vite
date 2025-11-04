@@ -1,15 +1,12 @@
-import { Fragment, ReactNode, useContext, useState } from "react";
+import { Fragment, type ReactNode, useContext } from "react";
 import { themeContext } from "../context/ThemeContext";
 import { Background } from "./background";
 import { FeatureTableRows } from "./FeatureTableRows";
-import { FeatureOverviewProps, getKeysForList } from "./ProjectsTab";
-import { DeveloperAssignmentData } from "./AddTaskElement";
+import { type FeatureOverviewProps, getKeysForList } from "./ProjectsTab";
 import { Developer } from "../../User";
-import { Button } from "./Button";
 import { Feature } from "../../feature";
 import { FeatureOveriewDeveloperAssigmentForm } from "./FeatureOverviewDevelopmentAssignmentForm";
 import { TaskDeveloperAssignmentForm } from "./TaskDeveloperAssigmentForm";
-import { Task } from "../../Task";
 import { Details } from "./Details";
 
 

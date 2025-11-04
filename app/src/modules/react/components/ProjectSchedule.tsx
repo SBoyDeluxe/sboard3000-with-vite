@@ -1,4 +1,4 @@
-import { useContext, ReactNode, Fragment } from "react";
+import { useContext, type ReactNode, Fragment } from "react";
 import { Developer } from "../../User";
 import { themeContext } from "../context/ThemeContext";
 import { Background } from "./background";

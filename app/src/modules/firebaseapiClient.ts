@@ -1,12 +1,8 @@
-import { create } from "domain";
 import { CryptoUtilObject } from "./Cryptography_Util";
 import { FirebaseURLBuilder } from "./firebase_url_builder";
-import { Password, User, Username } from "./User";
-import { Mail, MailBox, MailContent } from "./mailbox";
+import { Password, User } from "./User";
+import { MailBox, type MailContent } from "./mailbox";
 import { Project, ProjectKeyObject } from "./project";
-import { createPublicKey } from "crypto";
-import { firebaseClient } from "./react/store/UserStore";
-import { features } from "process";
 import { Feature } from "./feature";
 import { TimeConstraints } from "./Timeconstraints";
 import { Task } from "./Task";

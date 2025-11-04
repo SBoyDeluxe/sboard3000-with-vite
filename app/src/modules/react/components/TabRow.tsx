@@ -1,6 +1,5 @@
-import { CSSProperties, Key, useContext } from "react"
-import { State } from "./App"
-import { Button } from "./Button"
+import { type CSSProperties, useContext } from "react"
+import type { State } from "./App"
 import { ToggleButton } from "./ToggleButton"
 import { themeContext } from "../context/ThemeContext"
 

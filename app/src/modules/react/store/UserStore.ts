@@ -1,10 +1,8 @@
-import React, { createContext, useSyncExternalStore } from "react";
+import React, { createContext } from "react";
 import { FirebaseAPIClient } from "../../firebaseapiClient";
 import { User } from "../../User";
 import { LoadingStore } from "../components/LoadingStore";
-import { CryptoUtilObject } from "../../Cryptography_Util";
-import { useNavigate } from "react-router";
-import { MailContent } from "../../mailbox";
+import type { MailContent } from "../../mailbox";
 import { Project } from "../../project";
 
 
@@ -73,16 +71,7 @@ export const UserStore = {
       if (error instanceof Error) {
         LoadingStore.updateLoading();
 
-        //Indicates password was wrong
-        if (error.name.match("OperationError")) {
-
-          alert("That password/username combination was not found in our database, please try again");
-
-        } else {
-
-          alert(error);
-
-        }
+        alert(error.message);
 
       }
 
@@ -102,8 +91,21 @@ export const UserStore = {
       }).catch((error) => { throw error });
     } catch (error: unknown) {
       if (error instanceof Error) {
-        alert(error.message);
+
         LoadingStore.updateLoading();
+
+        //Indicates password was wrong
+        if (error.name.match("OperationError")) {
+
+          alert("That password/username combination was not found in our database, please try again");
+
+        } else {
+
+          alert(error);
+
+        }
+
+
       }
 
     }

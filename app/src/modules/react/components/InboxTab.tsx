@@ -1,5 +1,3 @@
-import { useMemo } from "react";
-import { MailBox } from "../../mailbox";
 import { useMailboxContentStore } from "../store/UserStore";
 import { getKeysForList } from "./ProjectsTab";
 

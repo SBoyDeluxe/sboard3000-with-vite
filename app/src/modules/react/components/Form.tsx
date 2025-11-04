@@ -1,4 +1,4 @@
-import { CSSProperties, useContext } from "react"
+import { type CSSProperties, useContext } from "react"
 import { themeContext } from "../context/ThemeContext"
 import React from "react"
 
