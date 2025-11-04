@@ -1,32 +1,15 @@
-import { createRoot } from 'react-dom/client';
-import { ApplicationConfiguration } from '../application_config';
 import Color from 'colorjs.io';
 import * as React from 'react';
-import { renderColors } from './RenderColors';
-import { Button, ButtonProps } from './Button';
-import { Background } from './background';
 import { themeContext } from '../context/ThemeContext'
-import { LoginForm } from './LoginForm';
-import { ToggleButton } from './ToggleButton';
-import { CSSProperties, useMemo } from 'react';
-import { TogglePair } from './TogglePair';
-import { ThemeSelector } from './ThemeSelector';
+import { useMemo } from 'react';
 import { Theme, ThemeValues } from '../../theme';
 import { FirebaseAPIClient } from '../../firebaseapiClient';
-import { Client, Developer, Manager, User } from '../../User';
-import { Header } from './Header';
-import { Footer } from './Footer';
 import { LoginRegistrationPage } from '../pages/LoginRegistrationPage';
-import { BrowserRouter, Link, Route, Routes, useNavigate } from "react-router-dom"
-import { TabRow } from './TabRow';
+import { Route, Routes, useNavigate } from "react-router-dom";
 import { LoggedInPage } from '../pages/LoggedInPage';
 import { firebaseClientContext, UserStore, useUserStore } from '../store/UserStore';
-import { LoadingStore, useLoadingStore } from './LoadingStore';
-import { Project } from '../../project';
-import { TimeConstraints } from '../../Timeconstraints';
-import { start } from 'repl';
+import { useLoadingStore } from './LoadingStore';
 
-import { ClientInputData, ParticipantInputData } from './reducers/ParticipantInputReducer';
 
 
 /**
@@ -95,7 +78,7 @@ export function App({  }: AppProps): React.ReactNode {
         const navigate = useNavigate();
         //When a change in the user-state happens we now someone have logged in, signed up or logged out <=> logged out/not logged in yet : userStore === null
         // || logged-in/signed-up <=> userStore !== null && loadingStore ==false
-        const handlePageChange = React.useEffect(() => {
+         React.useEffect(() => {
                 if (userStore == null && loadingStore === false) {
                         navigate("/");
 
