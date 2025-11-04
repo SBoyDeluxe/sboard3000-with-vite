@@ -1,6 +1,6 @@
-import { ReactNode, useState } from "react";
+import { type ReactNode, useState } from "react";
 import { Developer } from "../../User";
-import { DeveloperAssignmentData, DeverloperAssignmentForm } from "./AddTaskElement";
+import { type DeveloperAssignmentData, DeverloperAssignmentForm } from "./AddTaskElement";
 import { Feature } from "../../feature";
 import { Button } from "./Button";
 

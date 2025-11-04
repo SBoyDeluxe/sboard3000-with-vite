@@ -1,5 +1,4 @@
 import { useContext } from "react";
-import { Background } from "./background";
 import { themeContext } from "../context/ThemeContext";
 
 type ProgressBarProps = {

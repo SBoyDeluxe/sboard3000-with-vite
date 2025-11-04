@@ -1,13 +1,10 @@
 
-import { State } from "./App";
+import { type State } from "./App";
 import { Background } from "./background";
 import { themeContext } from "../context/ThemeContext";
 import { Form } from "./Form";
-import { ToggleButton } from "./ToggleButton";
-import { TogglePair } from "./TogglePair";
 import { Input } from "./Input";
-import { Button } from "./Button";
-import {Dispatch,ReactNode, SetStateAction } from "react";
+import {type ReactNode } from "react";
 import React from "react";
 
 

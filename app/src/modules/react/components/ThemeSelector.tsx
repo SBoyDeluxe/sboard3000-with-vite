@@ -1,12 +1,11 @@
 import Color from 'colorjs.io';
 import { Theme, ThemeValues } from "../../theme";
-import { State } from "./App";
-import React, { BaseSyntheticEvent, ChangeEventHandler, EventHandler, InputEventHandler, SyntheticEvent, useContext, useMemo, useState } from "react";
+import type { State } from "./App";
+import React, { useContext, useState } from "react";
 import { Background } from "./background";
 import { themeContext } from "../context/ThemeContext";
 import { Input } from "./Input";
 import { Form } from './Form';
-import { Button } from './Button';
 export type ThemeSelectorProps = {
 
 

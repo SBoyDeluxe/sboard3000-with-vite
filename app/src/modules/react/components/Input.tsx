@@ -1,7 +1,5 @@
-import { ChangeEventHandler, CSSProperties, MouseEventHandler } from "react"
-import { State } from "./App"
+import type { CSSProperties } from "react"
 import React from "react"
-import { ThemeValues } from "../../theme"
 
 export type InputProps = {
     /**

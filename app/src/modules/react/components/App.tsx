@@ -17,7 +17,7 @@ import { useLoadingStore } from './LoadingStore';
  */
 export type State<T> = {
         stateVariable: T,
-        setState: React.Dispatch<React.SetStateAction<T>>|Function
+        setState: React.Dispatch<React.SetStateAction<T>> | Function
 
 
 }
@@ -67,18 +67,18 @@ function catchError<T>(promise: Promise<T>): Promise<(T | undefined)[] | [Error]
         })
 }
 
-export function App({  }: AppProps): React.ReactNode {
+export function App({ }: AppProps): React.ReactNode {
         const appThemeContext = React.useContext(themeContext);
         const firebaseClient = React.useContext(firebaseClientContext);
-        const loadingStore = useLoadingStore();
-        const userStore = useUserStore();
+        let loadingStore = useLoadingStore();
+        let userStore = useUserStore();
 
 
 
         const navigate = useNavigate();
         //When a change in the user-state happens we now someone have logged in, signed up or logged out <=> logged out/not logged in yet : userStore === null
         // || logged-in/signed-up <=> userStore !== null && loadingStore ==false
-         React.useEffect(() => {
+        React.useEffect(() => {
                 if (userStore == null && loadingStore === false) {
                         navigate("/");
 
@@ -112,25 +112,22 @@ export function App({  }: AppProps): React.ReactNode {
 
         function signUp(username: string, password: string) {
 
-                try {
-                        UserStore.signUpUser(username, password);
-                        // firebaseClient.signUp(username, password).then((user) => {
+                UserStore.signUpUser(username, password);
+                // firebaseClient.signUp(username, password).then((user) => {
 
-                        //         //loading is done
-                        //         setLoading(false);
-                        //         setUserState(user);
+                //         //loading is done
+                //         setLoading(false);
+                //         setUserState(user);
 
 
-                        // }).then(()=>window.location.assign(`${(window.location.href.includes("?")) ? window.location.href.split("?")[0] : window.location.href}logged-in`))
-                        //  .catch((error) => console.log(error));
+                // }).then(()=>window.location.assign(`${(window.location.href.includes("?")) ? window.location.href.split("?")[0] : window.location.href}logged-in`))
+                //  .catch((error) => console.log(error));
 
-                } catch (error) {
-                        alert(error)
-                }
+
 
         }
 
-        
+
 
 
         const [loginToggle, setLoginToggle] = React.useState(initToggle);
@@ -203,9 +200,9 @@ export function App({  }: AppProps): React.ReactNode {
                                         </Route>
                                         <Route path='/logged-in' element={
                                                 <>
-                                                <LoggedInPage loading={loadingStore} themeState={themeState}  />
+                                                        <LoggedInPage loading={loadingStore} themeState={themeState} />
 
-                                              
+
                                                 </>
                                         }>
 

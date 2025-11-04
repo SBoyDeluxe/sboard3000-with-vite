@@ -1,14 +1,13 @@
-import { Fragment, Key, ReactNode, useContext } from "react";
+import { Fragment, type Key, type ReactNode, useContext } from "react";
 import { Form } from "./Form";
 import { Input } from "./Input";
-import { FieldSetOptions } from "./Form";
+import type { FieldSetOptions } from "./Form";
 import { themeContext } from "../context/ThemeContext";
 import { Button } from "./Button";
 import * as React from "react";
 import { Background } from "./background";
-import { ClientInputData, ParticipantInputData, useParticipantReducer } from "./reducers/ParticipantInputReducer";
+import { type ClientInputData, type ParticipantInputData, useParticipantReducer } from "./reducers/ParticipantInputReducer";
 
-import { ApplicationConfiguration } from "../application_config";
 import { firebaseClient, firebaseClientContext, UserStore } from "../store/UserStore";
 import { LoadingStore } from "./LoadingStore";
 import { Project } from "../../project";
