@@ -3,8 +3,7 @@ import { Project } from "./project";
 import { Feature } from "./feature";
 import { Task } from "./Task";
 import file from "../assets/application_key.json";
-import {Base64} from 'js-base64';
-    import { pbkdf2 } from "node:crypto";
+import { encode, decode } from "base-64";
 
 
 
@@ -82,7 +81,7 @@ export class CryptoUtilObject {
     * @param base64String 
     */
     static decodeBase64(base64String: string): string {
-        return Base64.decode(base64String);
+        return decode(base64String);
 
     }
     /**
@@ -92,7 +91,7 @@ export class CryptoUtilObject {
      * @param stringToBeBase64 
      */
     static encodeBase64(stringToBeBase64: string): string {
-        return  Base64.encode(stringToBeBase64,true);
+        return encode(stringToBeBase64);
 
 
     }
@@ -119,15 +118,14 @@ export class CryptoUtilObject {
         let usernameByteArray = txtEncoder.encode(username);
         let passwordByteArray = txtEncoder.encode(password);
 
-        const usernameExtraBytes = 16 - usernameByteArray.length;
-        const passwordExtraBytes = 16 - passwordByteArray.length;
+       
 
         //Set method-internal variables of username and password to null to minimize exposure time in stack memory in this part of the hierarchy
 
 
 
-        let transformedUsernameBytes = await transformUsername(usernameByteArray, passwordByteArray, usernameExtraBytes);
-        let transformedPasswordBytes = await transformPassword(passwordByteArray, usernameByteArray, passwordExtraBytes);
+        let transformedUsernameBytes = await transformUsername(usernameByteArray, passwordByteArray);
+        let transformedPasswordBytes = await transformPassword(passwordByteArray, usernameByteArray);
         //Set method-internal variables of username and password-bytearrays to null to minimize exposure time in stack memory in this part of the hierarchy
 
 
@@ -150,342 +148,70 @@ export class CryptoUtilObject {
         }
 
 
+        //Generate key from the combined array
 
+        let importedBaseDerivationKey = await window.crypto.subtle.importKey("raw", combinedUsernamePasswordByteArray, { name: "pbkdf2" }, false, ["deriveKey"]).catch((error) => { throw new Error(error) });
 
+        const userWrappingUnwrappingKey = await window.crypto.subtle.deriveKey({ name: "pbkdf2", hash: "SHA-512", iterations: 100000, salt: saltBytes }, importedBaseDerivationKey, { name: "AES-GCM", length: 256 }, true, ["wrapKey", "unwrapKey"]).catch((error) => { throw new Error(error) });
 
 
 
 
-        //Scrypt usage for password-based key derivation, we now also, if needed, generate the salt to minimize exposure time
-        let keyPromise: Promise<Buffer<ArrayBufferLike>> = new Promise<Buffer<ArrayBufferLike>>((resolve, reject) => {
 
-            pbkdf2(combinedUsernamePasswordByteArray,
-                saltBytes,
-                100000,
-                256,
-                "sha512",
-                (error, derivedKey) => {
-                    if (error) {
-                        reject(error.message);
-                    }
-                    else {
-                        resolve(derivedKey);
 
-                    }
 
 
-                });
+        return [userWrappingUnwrappingKey, saltBytes];
 
-        });
+         /**
+     * Transforms the given byte array into a uniquely generated set of bytes with the length of (usernameAsBytes.length + extraBytesWanted)
+     * @param { Uint8Array<ArrayBuffer>} usernameAsBytes - The username encoded as a uint8bitarray
+     * @param { Uint8Array<ArrayBuffer>} passwordAsBytes - The password encoded as a uint8bitarray
+     * @param {number} extraBytesWanted - The number of bytes you want to add to the username length
+     * @returns { Uint8Array<ArrayBuffer>} - The transformed username as a byte array
+     */
+     async function transformUsername(usernameAsBytes: Uint8Array<ArrayBufferLike>, passwordAsBytes: Uint8Array<ArrayBufferLike>): Promise<Uint8Array<ArrayBuffer>> {
+        //Gets a byte-array capable of holding all of the bytes neede4d
+        //let usernameTransformed = new  Uint8Array(usernameAsBytes.length + extraBytesWanted);
+        //let nthByte: number = 0;
 
 
-        //Import key as Cryptokey, including its function as a wrap/unwrap-key
+        //import a the user name as CryptoKey
 
-        let importedCryptoKey = await window.crypto.subtle.importKey("raw", (await keyPromise).subarray(0, 32), { name: "AES-GCM", length: 256 }, true, ["wrapKey", "unwrapKey"]);
+        const importedUsernameBytes = await window.crypto.subtle.importKey("raw", usernameAsBytes,{ name: "PBKDF2" }, false, ["deriveBits"]).catch((error) => { throw new Error(error) });
 
+        let usernameTransformed = await window.crypto.subtle.deriveBits({ name: "pbkdf2", hash: "SHA-512", iterations: 100000, salt: passwordAsBytes }, importedUsernameBytes, 16).catch((error) => { throw new Error(error) });
 
 
-        return [importedCryptoKey, saltBytes];
 
 
-
-
-
-        /**
-         * Transforms the given byte array into a uniquely generated set of bytes with the length of (usernameAsBytes.length + extraBytesWanted)
-         * @param { Uint8Array<ArrayBuffer>} usernameAsBytes - The username encoded as a uint8bitarray
-         * @param { Uint8Array<ArrayBuffer>} passwordAsBytes - The password encoded as a uint8bitarray
-         * @param {number} extraBytesWanted - The number of bytes you want to add to the username length
-         * @returns { Uint8Array<ArrayBuffer>} - The transformed username as a byte array
-         */
-        async function transformUsername(usernameAsBytes: Uint8Array<ArrayBufferLike>, passwordAsBytes: Uint8Array<ArrayBufferLike>, extraBytesWanted: number): Promise<Uint8Array<ArrayBuffer>> {
-            //Gets a byte-array capable of holding all of the bytes neede4d
-            //let usernameTransformed = new  Uint8Array(usernameAsBytes.length + extraBytesWanted);
-                                        let nthByte: number = 0;
-
-
-           let usernameTransformed =  await new Promise<Uint8Array>(async (resolve, reject) => {
-                //Use password as 'pepper'
-           return await pbkdf2(usernameAsBytes,
-                passwordAsBytes,
-                100000,
-                16,
-                "sha512",
-                (error, derivedKey) => {
-                    if (error) {
-                        reject(error.message);
-                    }
-                    else {
-                        resolve(new Uint8Array(derivedKey.buffer,derivedKey.byteOffset,derivedKey.length));
-
-                    }
-
-
-                });
-
-        }).catch((error)=>{throw new Error()});
-
-
-
-
-            /* for (let i = 0; i < usernameAsBytes.length; i++) {
-
-
-                usernameAsBytes.forEach((letter, index) => {
-                    //Checks so we don´t get null pointing
-                    if (passwordAsBytes[index]) {
-
-                        if ((index % i) % 2 === 0) {
-                            nthByte += (passwordAsBytes[index] - letter > 0) ? passwordAsBytes[index] - letter : letter - passwordAsBytes[index];
-                        }
-                        else {
-
-                            nthByte -= (passwordAsBytes[index] - letter > 0) ? passwordAsBytes[index] - letter : letter - passwordAsBytes[index];
-                        }
-
-                    }
-
-                    //Means we don´t have a value to use in the password byte array and that usernameAsBytes.length > oasswirdAsBytes
-                    else {
-
-                        if ((index % i) % 2 === 0) {
-                            nthByte += (passwordAsBytes[index % (passwordAsBytes.length)] - letter > 0) ? passwordAsBytes[index] - letter : letter - passwordAsBytes[index];
-                        }
-                        else {
-
-                            nthByte -= (passwordAsBytes[index % (passwordAsBytes.length)] - letter > 0) ? passwordAsBytes[index] - letter : letter - passwordAsBytes[index];
-                        }
-
-
-                    }
-                });
-
-                //nthByte has been calculated, if the byte is larger than 256 it won´t fit, so we cbeck so make sure it fits
-                if (nthByte >= 0) {
-                    nthByte = (nthByte > 256) ? nthByte % 256 : nthByte;
-                }
-
-                //If we have gotten a negative value we take the absolute of that value 
-                else {
-                    nthByte = -1 * nthByte;
-                    nthByte = (nthByte > 256) ? nthByte % 256 : nthByte;
-
-
-                }
-                usernameTransformed[i] = nthByte;
-
-
-
-
-
-
-            }
-
-            //Once these operations are complete, we have extraBytesWanted left before we have completed a 32 byte string
-            for (let i = 0; i < extraBytesWanted; i++) {
-
-                let nthByte: number = 0;
-
-                passwordAsBytes.forEach((letter, index) => {
-                    //Checks so we don´t get null pointing
-                    if (usernameAsBytes[index]) {
-
-                        if ((index % i) % 2 === 0) {
-                            nthByte += (usernameAsBytes[index] - letter > 0) ? usernameAsBytes[index] - letter : letter - usernameAsBytes[index];
-                        }
-                        else {
-
-                            nthByte -= (usernameAsBytes[index] - letter > 0) ? usernameAsBytes[index] - letter : letter - usernameAsBytes[index];
-                        }
-
-                    }
-
-                    //Means we don´t have a value to use in the password byte array and that usernameAsBytes.length > oasswirdAsBytes
-                    else {
-
-                        if ((index % i) % 2 === 0) {
-                            nthByte += (usernameAsBytes[index % (usernameAsBytes.length)] - letter > 0) ? usernameAsBytes[index] - letter : letter - usernameAsBytes[index];
-                        }
-                        else {
-
-                            nthByte -= (usernameAsBytes[index % (usernameAsBytes.length)] - letter > 0) ? usernameAsBytes[index] - letter : letter - usernameAsBytes[index];
-                        }
-
-
-                    }
-                });
-
-                //nthByte has been calculated, if the byte is larger than 256 it won´t fit, so we cbeck so make sure it fits
-                if (nthByte >= 0) {
-                    nthByte = (nthByte > 256) ? nthByte % 256 : nthByte;
-                }
-
-                //If we have gotten a negative value we take the absolute of that value 
-                else {
-                    nthByte = -1 * nthByte;
-                    nthByte = (nthByte > 256) ? nthByte % 256 : nthByte;
-
-
-                }
-
-                usernameTransformed[usernameAsBytes.length + i] = nthByte;
-
-
-
-
-
-
-            } */
-
-            return Uint8Array.from(usernameTransformed);
-        }
-        /**
-         * Transforms the given byte array into a uniquely generated  set of bytes with the length of (passwordAsBytes.length + extraBytesWanted)
-         * 
-         * 
-         * @param { Uint8Array<ArrayBuffer>} passwordAsBytes - The password encoded as a uint8bitarray
-         * @param { Uint8Array<ArrayBuffer>} usernameAsBytes - The username encoded as a uint8bitarray
-         * @param {number} extraBytesWanted - The number of bytes you want to add to the passwordByteArray length length
-         * @returns { Uint8Array<ArrayBuffer>} - The transformed password as a byte array
-         */
-        async function transformPassword(passwordAsBytes: Uint8Array<ArrayBufferLike>, usernameAsBytes: Uint8Array<ArrayBufferLike>, extraBytesWanted: number): Promise<Uint8Array<ArrayBuffer>> {
-
-       let passwordTransformed =  await new Promise<Uint8Array>(async (resolve, reject) => {
-                //Use password as 'pepper'
-           return await pbkdf2(
-                passwordAsBytes,
-                usernameAsBytes,
-                12000,
-                16,
-                "sha512",
-                (error, derivedKey) => {
-                    if (error) {
-                        reject(error.message);
-                    }
-                    else {
-                        resolve(new Uint8Array(derivedKey.buffer,derivedKey.byteOffset,derivedKey.length));
-
-                    }
-
-
-                });
-
-        }).catch((error)=>{throw new Error()});
-
-            // let  = new Uint8Array(passwordAsBytes.length + extraBytesWanted)
-            // for (let i = 0; i < passwordAsBytes.length; i++) {
-
-            //     let nthByte: number = 0;
-
-            //     passwordAsBytes.forEach((letter, index) => {
-            //         //Checks so we don´t get null pointing
-            //         if (usernameAsBytes[index]) {
-
-            //             if ((index % i) % 2 === 0) {
-            //                 nthByte += (usernameAsBytes[index] - letter > 0) ? usernameAsBytes[index] - letter : letter - usernameAsBytes[index];
-            //             }
-            //             else {
-
-            //                 nthByte -= (usernameAsBytes[index] - letter > 0) ? usernameAsBytes[index] - letter : letter - usernameAsBytes[index];
-            //             }
-
-            //         }
-
-            //         //Means we don´t have a value to use in the password byte array and that passwordAsBytes.length > oasswirdAsBytes
-            //         else {
-
-            //             if ((index % i) % 2 === 0) {
-            //                 nthByte += (passwordAsBytes[index % (passwordAsBytes.length)] - letter > 0) ? usernameAsBytes[index] - letter : letter - usernameAsBytes[index];
-            //             }
-            //             else {
-
-            //                 nthByte -= (passwordAsBytes[index % (passwordAsBytes.length)] - letter > 0) ? usernameAsBytes[index] - letter : letter - usernameAsBytes[index];
-            //             }
-
-
-            //         }
-            //     });
-
-            //     //nthByte has been calculated, if the byte is larger than 256 it won´t fit, so we cbeck so make sure it fits
-            //     if (nthByte >= 0) {
-            //         nthByte = (nthByte > 256) ? nthByte % 256 : nthByte;
-            //     }
-
-            //     //If we have gotten a negative value we take the absolute of that value 
-            //     else {
-            //         nthByte = -1 * nthByte;
-            //         nthByte = (nthByte > 256) ? nthByte % 256 : nthByte;
-
-
-            //     }
-            //     passwordTransformed[i] = nthByte;
-
-
-
-
-
-
-            // }
-
-            // //Once these operations are complete, we have extraBytesWanted left before we have completed a 32 byte string
-            // for (let i = 0; i < extraBytesWanted; i++) {
-
-            //     let nthByte: number = 0;
-
-            //     usernameAsBytes.forEach((letter, index) => {
-            //         //Checks so we don´t get null pointing
-            //         if (usernameAsBytes[index]) {
-
-            //             if ((index % i) % 2 === 0) {
-            //                 nthByte += (usernameAsBytes[index] - letter > 0) ? usernameAsBytes[index] - letter : letter - usernameAsBytes[index];
-            //             }
-            //             else {
-
-            //                 nthByte -= (usernameAsBytes[index] - letter > 0) ? usernameAsBytes[index] - letter : letter - usernameAsBytes[index];
-            //             }
-
-            //         }
-
-            //         //Means we don´t have a value to use in the password byte array and that usernameAsBytes.length > oasswirdAsBytes
-            //         else {
-
-            //             if ((index % i) % 2 === 0) {
-            //                 nthByte += (usernameAsBytes[index % (usernameAsBytes.length)] - letter > 0) ? usernameAsBytes[index] - letter : letter - usernameAsBytes[index];
-            //             }
-            //             else {
-
-            //                 nthByte -= (usernameAsBytes[index % (usernameAsBytes.length)] - letter > 0) ? usernameAsBytes[index] - letter : letter - usernameAsBytes[index];
-            //             }
-
-
-            //         }
-            //     });
-
-            //     //nthByte has been calculated, if the byte is larger than 256 it won´t fit, so we cbeck so make sure it fits
-            //     if (nthByte >= 0) {
-            //         nthByte = (nthByte > 256) ? nthByte % 256 : nthByte;
-            //     }
-
-            //     //If we have gotten a negative value we take the absolute of that value 
-            //     else {
-            //         nthByte = -1 * nthByte;
-            //         nthByte = (nthByte > 256) ? nthByte % 256 : nthByte;
-
-
-            //     }
-
-            //     passwordTransformed[passwordAsBytes.length + i] = nthByte;
-
-
-
-
-
-
-            // }
-
-            return Uint8Array.from(passwordTransformed);
-        }
+        return new Uint8Array(usernameTransformed);
     }
+    /**
+     * Transforms the given byte array into a uniquely generated  set of bytes with the length of (passwordAsBytes.length + extraBytesWanted)
+     * 
+     * 
+     * @param { Uint8Array<ArrayBuffer>} passwordAsBytes - The password encoded as a uint8bitarray
+     * @param { Uint8Array<ArrayBuffer>} usernameAsBytes - The username encoded as a uint8bitarray
+     * @param {number} extraBytesWanted - The number of bytes you want to add to the passwordByteArray length length
+     * @returns { Uint8Array<ArrayBuffer>} - The transformed password as a byte array
+     */
+     async function transformPassword(passwordAsBytes: Uint8Array<ArrayBufferLike>, usernameAsBytes: Uint8Array<ArrayBufferLike>): Promise<Uint8Array<ArrayBuffer>> {
+
+
+        const importedPasswordAsBytes = await window.crypto.subtle.importKey("raw", passwordAsBytes, { name: "PBKDF2" }, false, ["deriveBits"]).catch((error) => { throw new Error(error) });
+
+        let passwordAsBytesTransformed = await window.crypto.subtle.deriveBits({ name: "pbkdf2", hash: "SHA-512", iterations: 120000, salt: usernameAsBytes }, importedPasswordAsBytes, 16).catch((error) => { throw new Error(error) });
+
+        return new Uint8Array(passwordAsBytesTransformed);
+
+    }
+
+
+    }
+
+
+   
 
     /**
      * Generates a wrapped encryption key to encrypt/decrypt the sensitive user-object 
@@ -499,15 +225,15 @@ export class CryptoUtilObject {
      * @returns {[Uint8Array<ArrayBuffer>, Uint8Array<ArrayBuffer>]} - The wrapped key and initilization vector used in the wrap cipher
      */
     static async generateAESGCMUserSecretKey(userWrappingKey: CryptoKey) {
-       
-            let unwrappedKey = await window.crypto.subtle.generateKey(
+
+        let unwrappedKey = await window.crypto.subtle.generateKey(
             {
                 name: "AES-GCM",
                 length: 256,
             },
             true,
             ["encrypt", "decrypt"],
-            );
+        );
         //Generate IV - 16 Bytes is recommended no matter block size
 
         const iv = window.crypto.getRandomValues(new Uint8Array(16));
@@ -531,7 +257,7 @@ export class CryptoUtilObject {
 
         return [uint8Array, iv];
 
-}
+    }
     /**
      * Generates a AES-GCM project-encryption  key, to be assigned to projectKey in ProjectKeyObject
      * 
@@ -539,9 +265,9 @@ export class CryptoUtilObject {
      * 
      * @see | {@link ProjectKeyObject.projectKey} |  
      */
-    static async generateAESGCMProjectKey() :  Promise<JsonWebKey>{
+    static async generateAESGCMProjectKey(): Promise<JsonWebKey> {
 
-       const aesKey = await window.crypto.subtle.exportKey( "jwk", await window.crypto.subtle.generateKey(
+        const aesKey = await window.crypto.subtle.exportKey("jwk", await window.crypto.subtle.generateKey(
             {
                 name: "AES-GCM",
                 length: 256,
@@ -555,7 +281,7 @@ export class CryptoUtilObject {
 
 
 
-    
+
     /**
      * Generates a wrapped encryption key to encrypt/decrypt the sensitive user-object 
      * 
@@ -567,7 +293,7 @@ export class CryptoUtilObject {
      * @param {KeyObject} userWrappingKey - The user specific secret key instantiated in {@linkcode CryptoUtilObject.createUserWrapUnwrapKey}, used to wrap the AES-GCM-key to enforce user-specific access to user encryption/decryption key 
      * @returns {[Uint8Array<ArrayBuffer>, Uint8Array<ArrayBuffer>]} - The wrapped key and initilization vector used in the wrap cipher
      */
-    static async wrapPrivateKey(keyToWrap: CryptoKey, userWrappingKey: CryptoKey) : Promise<[Uint8Array<ArrayBuffer>, Uint8Array<ArrayBuffer>]> {
+    static async wrapPrivateKey(keyToWrap: CryptoKey, userWrappingKey: CryptoKey): Promise<[Uint8Array<ArrayBuffer>, Uint8Array<ArrayBuffer>]> {
 
         //Generate IV - 16 Bytes is recommended no matter block size
 
@@ -627,13 +353,13 @@ export class CryptoUtilObject {
                     additionalData: new TextEncoder().encode(applicationKeyJwk.k)
 
                 },
-                { name: "RSA-OAEP", hash:"SHA-512"},
+                { name: "RSA-OAEP", hash: "SHA-512" },
                 //Since we don´t change the rsa key this needs to be extractable to be re-wrapped with the new user key on log-out
                 true,
-                ["decrypt"]).catch((error)=>{throw new Error("Username password combination not found!")});
+                ["decrypt"]).catch((error) => { throw new Error("Username password combination not found!") });
 
         }
-        else if(!isRSAKey) {
+        else if (!isRSAKey) {
             return await window.crypto.subtle.unwrapKey(
                 "jwk",
                 wrappedKey,
@@ -648,9 +374,9 @@ export class CryptoUtilObject {
                 },
                 { name: "AES-GCM", length: 256 },
                 false,
-                ["encrypt", "decrypt"]).catch((error)=>{throw new Error("Username password combination not found!")});
+                ["encrypt", "decrypt"]).catch((error) => { throw new Error("Username password combination not found!") });
         }
-        else{
+        else {
             throw new Error("Unsupported input : CryptographyUtilObject.unwrapKey")
         }
     }
@@ -692,15 +418,15 @@ export class CryptoUtilObject {
      * @returns {} - [initializationVector, encryptedData] || (if any only if isRsaKey == true) [null, encryptedData] : null since no init-vector needed for public encryption
      * 
      */
-    static async encrypt(data: (User | Project | Feature | Task | string), encryptionKey: CryptoKey |  null, isRSAKey: boolean) : Promise<[(null),Uint8Array<ArrayBuffer> ]|[Uint8Array<ArrayBuffer>,Uint8Array<ArrayBuffer>]> {
+    static async encrypt(data: (User | Project | Feature | Task | string), encryptionKey: CryptoKey | null, isRSAKey: boolean): Promise<[(null), Uint8Array<ArrayBuffer>] | [Uint8Array<ArrayBuffer>, Uint8Array<ArrayBuffer>]> {
 
-        if ((data instanceof User || data instanceof Project || data instanceof Feature || data instanceof Task ||typeof data === "string") && encryptionKey != null) {
+        if ((data instanceof User || data instanceof Project || data instanceof Feature || data instanceof Task || typeof data === "string") && encryptionKey != null) {
 
             if (isRSAKey) { //If a User-instance this means that it is to be posted inside the  `/mailbox`-table, and uses the private AES-GCM key generated by the user
 
-                const dataBuffer = (typeof data === "string")? new TextEncoder().encode(data) : new TextEncoder().encode(JSON.stringify(data)) ;
-                
-                const encryptedData = await window.crypto.subtle.encrypt({name:"RSA-OAEP"},encryptionKey, dataBuffer);
+                const dataBuffer = (typeof data === "string") ? new TextEncoder().encode(data) : new TextEncoder().encode(JSON.stringify(data));
+
+                const encryptedData = await window.crypto.subtle.encrypt({ name: "RSA-OAEP" }, encryptionKey, dataBuffer);
 
                 const uint8Array = new Uint8Array(encryptedData);
 
@@ -730,45 +456,45 @@ export class CryptoUtilObject {
         }
         //If not any of the above <=> Is Username-array
         else if (typeof data === "string") {
-             
-                const dataBuffer = new TextEncoder().encode(data);
 
-                let cryptoKey = await CryptoUtilObject._applicationKey;
-                // key.type = "secret";
-                // key.symmetricKeySize = 256;
+            const dataBuffer = new TextEncoder().encode(data);
 
-                // const cryptoKey = key.toCryptoKey({
-                //     //AES-GCM : Advanced Encryption Standard using Galois Counter Mode - Provides a) Authentication, b) Integrity, Security -functionality. Used for encryption/decryption of trivial security data I.E The username list in /username
-                //     name: "AES-GCM",
-                //     length: 256
-                // },
-                //     false,
-                //     ["encrypt", "decrypt"]);
-                const Int8Array = new Uint8Array(32);
-                const initVector: Uint8Array = window.crypto.getRandomValues(Int8Array);
+            let cryptoKey = await CryptoUtilObject._applicationKey;
+            // key.type = "secret";
+            // key.symmetricKeySize = 256;
 
-
-                const encryptedData = await window.crypto.subtle.encrypt(
-                    {
-                        name: `AES-GCM`,
-                        iv: initVector
-
-                    },
-                    cryptoKey,
-                    dataBuffer);
-
-                const uint8Array = new Uint8Array(encryptedData);
+            // const cryptoKey = key.toCryptoKey({
+            //     //AES-GCM : Advanced Encryption Standard using Galois Counter Mode - Provides a) Authentication, b) Integrity, Security -functionality. Used for encryption/decryption of trivial security data I.E The username list in /username
+            //     name: "AES-GCM",
+            //     length: 256
+            // },
+            //     false,
+            //     ["encrypt", "decrypt"]);
+            const Int8Array = new Uint8Array(32);
+            const initVector: Uint8Array = window.crypto.getRandomValues(Int8Array);
 
 
-                return [initVector, uint8Array];
-            
+            const encryptedData = await window.crypto.subtle.encrypt(
+                {
+                    name: `AES-GCM`,
+                    iv: initVector
+
+                },
+                cryptoKey,
+                dataBuffer);
+
+            const uint8Array = new Uint8Array(encryptedData);
+
+
+            return [initVector, uint8Array];
+
 
 
 
 
 
         }
-        else{
+        else {
 
             throw Error("Unsupported input : CryptoUtil.encrypt");
         }
@@ -782,15 +508,15 @@ export class CryptoUtilObject {
      * @param data 
      * @returns hashed data
      */
-    static async createHash(data : string){
+    static async createHash(data: string) {
 
 
-            const dataBuffer = new TextEncoder().encode(data).buffer;
-           const digest = window.crypto.subtle.digest({name : "SHA-256"}, dataBuffer);
-           const hashArray = Array.from(new Uint8Array( await digest)); 
-            const hashHex = hashArray.map((b) => b.toString(16).padStart(2, "0")).join(""); 
+        const dataBuffer = new TextEncoder().encode(data).buffer;
+        const digest = window.crypto.subtle.digest({ name: "SHA-256" }, dataBuffer);
+        const hashArray = Array.from(new Uint8Array(await digest));
+        const hashHex = hashArray.map((b) => b.toString(16).padStart(2, "0")).join("");
 
-           return  hashHex;
+        return hashHex;
 
     }
     /**
@@ -805,15 +531,15 @@ export class CryptoUtilObject {
      * 
      * @see     | {@linkplain CryptoUtilObject.unwrapKey}, for the use cases pertaining to unwrapped keys}|
      */
-    static async decrypt(encryptedData: Uint8Array<ArrayBuffer>, decryptionKey: CryptoKey | null, initVector: Uint8Array<ArrayBuffer>|null, isRSAKey: boolean) {
+    static async decrypt(encryptedData: Uint8Array<ArrayBuffer>, decryptionKey: CryptoKey | null, initVector: Uint8Array<ArrayBuffer> | null, isRSAKey: boolean) {
 
-            let returnString : string = ""; 
+        let returnString: string = "";
 
-        if (isRSAKey && decryptionKey ) { //If a User-instance this means that it is to be posted inside the  `/user`-table, and uses the private AES-GCM key generated by the user
+        if (isRSAKey && decryptionKey) { //If a User-instance this means that it is to be posted inside the  `/user`-table, and uses the private AES-GCM key generated by the user
 
 
-            
-            const decryptedData = await window.crypto.subtle.decrypt({name:"RSA-OAEP"},decryptionKey, encryptedData);
+
+            const decryptedData = await window.crypto.subtle.decrypt({ name: "RSA-OAEP" }, decryptionKey, encryptedData);
 
 
             returnString = new TextDecoder().decode(decryptedData);
@@ -850,12 +576,12 @@ export class CryptoUtilObject {
                 cryptoKey,
                 encryptedData);
 
-            returnString = new TextDecoder().decode( decryptedData);
+            returnString = new TextDecoder().decode(decryptedData);
 
         }
 
         return returnString;
-        
+
 
 
 

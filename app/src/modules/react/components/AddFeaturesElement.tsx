@@ -1,11 +1,11 @@
-import { useContext, ReactNode, useState, Key, ChangeEvent } from "react";
+import { useContext, type ReactNode, useState, type Key, type ChangeEvent } from "react";
 import { TimeConstraints } from "../../Timeconstraints";
 import { Developer } from "../../User";
 import { themeContext } from "../context/ThemeContext";
 import { Button } from "./Button";
-import { FieldSetOptions, Form } from "./Form";
+import { type FieldSetOptions, Form } from "./Form";
 import { Input } from "./Input";
-import { AddFeaturesElementProps } from "./ProjectsTab";
+import type { AddFeaturesElementProps } from "./ProjectsTab";
 
 export function AddFeaturesElement({ onSubmitFeature, projectDevTeam }: AddFeaturesElementProps) {
 
