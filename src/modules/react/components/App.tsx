@@ -8,7 +8,7 @@ import { LoginRegistrationPage } from '../pages/LoginRegistrationPage';
 import { Route, Routes, useNavigate } from "react-router-dom";
 import { LoggedInPage } from '../pages/LoggedInPage';
 import { firebaseClientContext, UserStore, useUserStore } from '../store/UserStore';
-import { useLoadingStore } from './LoadingStore';
+import { LoadingStore, useLoadingStore } from './LoadingStore';
 
 
 
@@ -70,8 +70,8 @@ function catchError<T>(promise: Promise<T>): Promise<(T | undefined)[] | [Error]
 export function App({ }: AppProps): React.ReactNode {
         const appThemeContext = React.useContext(themeContext);
         const firebaseClient = React.useContext(firebaseClientContext);
-        let loadingStore = useLoadingStore();
-        let userStore = useUserStore();
+        let loadingStore = React.useSyncExternalStore(LoadingStore.subscribe, LoadingStore.getSnapshotIsLoading);
+        let userStore = React.useSyncExternalStore(UserStore.subscribe, UserStore.getSnapshotUser);
 
 
 
