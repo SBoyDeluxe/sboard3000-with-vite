@@ -9,14 +9,13 @@ type TaskDeveloperAssignmentFormProps = {
     developmentTask: Task,
     featureDevelopers: Developer[],
     dispatchAction: (action: any) => void,
-    children?: ReactNode,
     featureIndex: number,
     devTaskIndex: number,
     taskGoalIndex?: number | null
 
 }
 
-export function TaskDeveloperAssignmentForm({ featureIndex, developmentTask, devTaskIndex, taskGoalIndex = null, dispatchAction, featureDevelopers, children = (<></>) }: TaskDeveloperAssignmentFormProps) {
+export function TaskDeveloperAssignmentForm({ featureIndex, developmentTask, devTaskIndex, taskGoalIndex = null, dispatchAction, featureDevelopers }: TaskDeveloperAssignmentFormProps) {
     const [selectedIndicesState, setSelectedIndicesState] = useState({ indicesSelected: [0] });
 
 
@@ -75,28 +74,10 @@ export function TaskDeveloperAssignmentForm({ featureIndex, developmentTask, dev
 
     }
 
-    function getSelectOptionsForDevTask(devOptions: Developer[] | null[]) {
-
-        if (devOptions[0] == null) {
-            return (<></>)
-        } else {
-            const keys = getKeysForList(devOptions);
-            const selectOptions = devOptions.map((dev, index) => {
-                return (<option key={keys[index]} value={index}>
-                    `${index}. ${dev!.username} `
-
-                </option>)
-            });
-
-
-        }
-
-
-    }
 
     function getSelectedDevs(indicesSelected: number[], devOptions: Developer[]) {
 
-        return devOptions.filter((dev, index) => {
+        return devOptions.filter((_dev, index) => {
 
             for (let i = 0; i < indicesSelected.length; i++) {
                 if (indicesSelected[i] == index) {

@@ -2,6 +2,7 @@ import { type CSSProperties, useContext } from "react"
 import type { State } from "./App"
 import { ToggleButton } from "./ToggleButton"
 import { themeContext } from "../context/ThemeContext"
+import { getKeysForList } from "./ProjectsTab"
 
 
 export type TabRowProps = {
@@ -22,10 +23,7 @@ export type TabRowProps = {
 
 export function TabRow({pageNames, activeTabNumberState}:TabRowProps){
 
-         let keys : React.Key[] = pageNames.map((val)=>{
-                return ( window.crypto.randomUUID().toString(),
-                 window.crypto.randomUUID().toString())});
-         let divKey : React.Key = window.crypto.randomUUID();
+         let keys : React.Key[] =getKeysForList(pageNames);
         const appThemeContext = useContext(themeContext);
 
      

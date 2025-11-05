@@ -1,8 +1,8 @@
-import { type CSSProperties, useContext, type MouseEventHandler } from "react"
+import { type CSSProperties, useContext } from "react"
 import { themeContext } from "../context/ThemeContext"
 import { ToggleButton } from "./ToggleButton";
 import React from "react";
-import type { ClickHandler, State } from "./App";
+import type { State } from "./App";
 
 export type TogglePairProps = {
   toggleState: State<boolean>,

@@ -28,7 +28,7 @@ export function ThemeSelector({ themeState }: ThemeSelectorProps) {
     const [lightnessPreferenceSelect, setLightnessPreference] = useState(0);
 
 
-    function handleInput(event: (React.ChangeEvent<HTMLInputElement>)) {
+    function handleChange(event: (React.ChangeEvent<HTMLInputElement>)) {
         event.stopPropagation();
         event.preventDefault();
 
@@ -65,7 +65,7 @@ export function ThemeSelector({ themeState }: ThemeSelectorProps) {
                     <option value="2">Light</option>
                 </select>
 
-                <Input onInput={handleInput} name="color-selection" inputState={appThemeContext.primaryBackgroundColor} cssClassName="color-select" inputType="color" labelName="Color-selection" onEvent={handleInput}  ></Input>
+                <Input  name="color-selection" inputState={appThemeContext.primaryBackgroundColor} cssClassName="color-select" inputType="color" labelName="Color-selection" onEvent={handleChange}  ></Input>
 
             </Form>
         </Background>

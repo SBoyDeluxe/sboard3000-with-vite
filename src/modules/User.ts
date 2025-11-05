@@ -1,10 +1,5 @@
-import { BinaryLike, KeyObject, webcrypto } from "crypto";
-import { CryptoUtilObject } from "./Cryptography_Util";
-import { Feature } from "./feature";
-import { Project } from "./project";
-import { Mail, MailBox } from "./mailbox";
+import { MailBox } from "./mailbox";
 import { FirebaseAPIClient } from "./firebaseapiClient";
-import { isSet } from "util/types";
 
 
 /**
@@ -42,7 +37,7 @@ export class Password {
      * @memberof Password
      */
 
-    salt: BinaryLike
+    salt: string | ArrayBufferView
 
     //Implement as RSA : pub-key = pub key, priv = pass
     //Implement as AES : Store init vector with user-data and update on every get of user object
@@ -52,7 +47,7 @@ export class Password {
      * user profile
      * @memberof User
      */
-    constructor(passwordKey: CryptoKey, salt: BinaryLike) {
+    constructor(passwordKey: CryptoKey, salt: string | ArrayBufferView) {
         this._passwordKey = passwordKey;
         this.salt = salt;
 

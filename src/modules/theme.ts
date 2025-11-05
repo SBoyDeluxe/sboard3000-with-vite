@@ -194,19 +194,19 @@ export class Theme {
                             resultThemeVals = makeDarkAnalogousThemeValues(paletteArray);
 
 
-                        }
+                        }break;
                         break;
                         case 1: {
                             resultThemeVals = makeMediumAnalagousThemeValues(paletteArray);
 
 
-                        }
+                        }break;
 
                         case 2: {
                             resultThemeVals = makeAnalgousLightThemeValues(paletteArray);
 
 
-                        }
+                        }break;
                     }
 
 
@@ -225,13 +225,13 @@ export class Theme {
                             resultThemeVals = makeDarkComplementaryThemeValues(paletteArray);
 
 
-                        }
+                        }break;
                         case 1: {
 
                             resultThemeVals = makeMediumComplementaryThemeValues(paletteArray);
 
 
-                        }
+                        }break;
 
                         case 2: {
 
@@ -240,7 +240,7 @@ export class Theme {
                             resultThemeVals = makeLightComplementaryThemeValues(paletteArray);
 
 
-                        }
+                        }break;
                     }
 
 
@@ -260,6 +260,7 @@ export class Theme {
 
 
                         }
+                        break;
                         case 1: {
 
 
@@ -267,6 +268,7 @@ export class Theme {
 
 
                         }
+                        break;
 
                         case 2: {
 
@@ -277,6 +279,7 @@ export class Theme {
 
 
                         }
+                        break;
                     }
 
 
@@ -297,6 +300,7 @@ export class Theme {
 
 
                         }
+                        break;
                         case 1: {
 
 
@@ -304,6 +308,7 @@ export class Theme {
             resultThemeVals = makeMediumCompoundThemeValues(paletteArray);
 
                         }
+                        break;
 
                         case 2: {
 
@@ -315,6 +320,7 @@ export class Theme {
 
 
                         }
+                        break;
                     }
 
                     

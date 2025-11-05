@@ -38,11 +38,7 @@ function ParticipantInputReducer(participantsState: {
     const projectDevelopersIsUninitiated = participantsState.projectDevelopers[0].userType[0] === "" && participantsState.projectDevelopers[0].username === "";
     let initClauseRan = false;
     const projectClientsIsUninitiated = participantsState.projectClients[0].username === "";
-    let returnsState :  {
-    projectManagers: ParticipantInputData[];
-    projectDevelopers: ParticipantInputData[];
-    projectClients: ClientInputData[];
-};
+  
     //Check so that we have values in our arrays
     if ( (projectClientsIsUninitiated ) && ( action.type==="ADD_CLIENT_INPUT_DATA")) 
         {
@@ -95,7 +91,7 @@ function ParticipantInputReducer(participantsState: {
         case "ADD_MANAGER_USER_TYPE": {
 
 
-            const managerToAddTypeTo = participantsState.projectManagers.filter((manager, index) => manager.username === action.payload.username)[0];
+            const managerToAddTypeTo = participantsState.projectManagers.filter((manager, _index) => manager.username === action.payload.username)[0];
             //We only want to run the rest if and only if a manager with the username is found
             if (managerToAddTypeTo) {
                 const newUserTypeArray = managerToAddTypeTo.userType.concat(action.payload.userType);
@@ -117,7 +113,7 @@ function ParticipantInputReducer(participantsState: {
         case "REMOVE_MANAGER_USER_TYPE": {
             
            
-            const managerToRemoveTypeTo = participantsState.projectManagers.filter((manager, index) => manager.username === action.payload.username)[0];
+            const managerToRemoveTypeTo = participantsState.projectManagers.filter((manager, _index) => manager.username === action.payload.username)[0];
             if(managerToRemoveTypeTo){
             const newUserTypeArray = managerToRemoveTypeTo.userType.filter((userType) => userType !== action.payload.userType);
 
@@ -151,7 +147,7 @@ function ParticipantInputReducer(participantsState: {
         case "ADD_DEVELOPER_USER_TYPE": {
 
 
-            let developerToAddTypeTo = participantsState.projectDevelopers.filter((dev, index) => dev.username === action.payload.username)[0];
+            let developerToAddTypeTo = participantsState.projectDevelopers.filter((dev, _index) => dev.username === action.payload.username)[0];
             if(developerToAddTypeTo){
             const newUserTypeArray = developerToAddTypeTo.userType.concat(action.payload.userType);
 
@@ -173,7 +169,7 @@ function ParticipantInputReducer(participantsState: {
             
 
 
-            let developerToRemoveTypeTo = participantsState.projectDevelopers.filter((dev, index) => dev.username === action.payload.username)[0];
+            let developerToRemoveTypeTo = participantsState.projectDevelopers.filter((dev, _index) => dev.username === action.payload.username)[0];
             if(developerToRemoveTypeTo){
             const newUserTypeArray = developerToRemoveTypeTo.userType.filter((userType) => userType !== action.payload.userType);
 
