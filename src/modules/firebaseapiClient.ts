@@ -277,7 +277,7 @@ export class FirebaseAPIClient {
 
                 console.log(decryptedData);
 
-                mailbox.addContent(decryptedData);
+                mailbox.addContent([decryptedData]);
 
 
 
