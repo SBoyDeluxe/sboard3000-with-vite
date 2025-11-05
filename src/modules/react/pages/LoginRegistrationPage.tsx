@@ -21,7 +21,7 @@ export function LoginRegistrationPage({ themeState, loading, signUp, login, form
                 <themeContext.Provider value={themeState.stateVariable}>
                         <title>Scrumboard 3000 : Be agil!</title>
                         <Background cssClassName='mainBackground' backgroundColor={themeState.stateVariable.primaryBackgroundColor}>
-                                <Header headerColor={themeState.stateVariable.primaryBackgroundColor} />
+                                <Header/>
                                 {(loading == true) ? (<>
                                         <img className="loading-indicator" src='https://icons8.com/preloaders/preloaders/1480/Fidget-spinner-128.gif'>
 

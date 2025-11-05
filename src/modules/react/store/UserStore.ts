@@ -11,7 +11,6 @@ export const firebaseClient = new FirebaseAPIClient();
 export const firebaseClientContext = createContext<FirebaseAPIClient>(firebaseClient);
 let user: User | null = null;
 let projects: Project[] | null = null;
-let contents: string[] | null;
 //let isLoading : boolean = false;
 let listernMailboxStore: any[] = [];
 let listernersUserStore: any[] = [];
@@ -25,11 +24,7 @@ function emitChangeUser() {
     listener();
   }
 };
-function emitChangeMailbox() {
-  for (let listener of listernMailboxStore) {
-    listener();
-  }
-};
+
 function emitChangeProjectStore() {
   for (let listener of listenerProjectStore) {
     listener();
@@ -141,6 +136,11 @@ export const UserStore = {
 
 
 export const MailboxStore = {
+   emitChangeMailbox() {
+  for (let listener of listernMailboxStore) {
+    listener();
+  }
+},
 
   subscribe(listener: any) {
     listernMailboxStore = [...listernMailboxStore, listener];
@@ -155,7 +155,7 @@ export const MailboxStore = {
 
   async sendMail(userIds: number[], mailContent: MailContent) {
     LoadingStore.updateLoading();
-    const mailComplete: Promise<void>[] = userIds.map((userId, index) => {
+    const mailComplete: Promise<void>[] = userIds.map((userId, _index) => {
 
       return firebaseClient.sendMail(userId, mailContent).catch((error: Error) => alert(error.message));
     });

@@ -1,19 +1,12 @@
 import { useMailboxContentStore } from "../store/UserStore";
 import { getKeysForList } from "./ProjectsTab";
 
-export type InboxTabProps = {
-    /**
-     * The mailbox whose contents are supposed to be displayed
-     */
-    mailBoxContents: string[],
 
-
-}
 
 /**
  * Generates the contents of a users inbox
  */
-export function InboxTab({ }: InboxTabProps) {
+export function InboxTab() {
 
     const mailboxStore = useMailboxContentStore();
 

@@ -60,7 +60,7 @@ export function LoggedInPage({ loading, themeState, }: { loading: boolean; theme
                 <>
                         <Background cssClassName='mainBackground' backgroundColor={appThemeContext.primaryBackgroundColor}>
 
-                                <Header headerColor={appThemeContext.primaryBackgroundColor}>
+                                <Header >
                                         <h3>{`Welcome ${userState?.username.username}`}</h3>
                                         <Button isDisabled={false} cssClassName="log-out-button" children={<p>{"Log out"}</p>} onClick={(e) => (handleLogOutClick(e))} ></Button>
                                         <TabRow activeTabNumberState={{
@@ -80,30 +80,7 @@ export function LoggedInPage({ loading, themeState, }: { loading: boolean; theme
                                 <TabPage activeTabState={{
                                         stateVariable: activeTabNumberState.stateVariable,
                                         setState: activeTabNumberState.setState
-                                }} tabs={function (tabState: number): React.ReactNode {
-                                        switch (activeTabNumberState.stateVariable) {
-
-                                                case 0: {
-
-                                                        return (<>
-                                                                <CreateProjectTab></CreateProjectTab>
-                                                        </>)
-                                                }
-                                                        break;
-                                                case 1: {
-                                                        return (<><InboxTab></InboxTab>
-                                                        </>
-                                                        )
-                                                }
-                                                        break;
-                                                case 2: {
-                                                        return (<><ProjectsTab></ProjectsTab>
-                                                        </>)
-                                                }
-                                                        break;
-                                                default: break;
-                                        }
-                                }} headerProps={tabPageHeaderProps}></TabPage>
+                                }} tabs={tabs} headerProps={tabPageHeaderProps}></TabPage>
                                 </Background>
                                 <Footer content={<ThemeSelector themeState={themeState}></ThemeSelector>} />
 
@@ -113,3 +90,28 @@ export function LoggedInPage({ loading, themeState, }: { loading: boolean; theme
 
 
 }
+function tabs(tabstate:number) {
+        switch (tabstate) {
+
+                case 0: {
+
+                        return (<>
+                                <CreateProjectTab></CreateProjectTab>
+                        </>);
+                }
+                        break;
+                case 1: {
+                        return (<><InboxTab></InboxTab>
+                        </>
+                        );
+                }
+                        break;
+                case 2: {
+                        return (<><ProjectsTab></ProjectsTab>
+                        </>);
+                }
+                        break;
+                default: break;
+        }
+}
+

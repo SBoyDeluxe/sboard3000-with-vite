@@ -1,7 +1,5 @@
-import { type CSSProperties, useContext, type MouseEventHandler } from "react"
+import { type CSSProperties } from "react"
 import { Button } from "./Button"
-import { themeContext } from "../context/ThemeContext"
-import { type ClickHandler, type State } from "./App"
 import React from "react"
 
 export type ToggleButtonProp = {
@@ -13,7 +11,6 @@ export type ToggleButtonProp = {
 }
 
 export function ToggleButton({ cssClassName, style, children, onClick, isDisabled }: ToggleButtonProp) {
-    const appThemeContext = useContext(themeContext);
 
 
 
