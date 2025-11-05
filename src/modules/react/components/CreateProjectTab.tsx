@@ -212,12 +212,24 @@ export function CreateProjectTab( ): ReactNode {
                                 const clientsExist = (projectClients.filter((client) => (client.userId === -1 && client.username === ""))[0] === undefined);
 
                                 const clients = (clientsExist) ? (projectClients.map((client)=>new Client(client.username, client.userId))) : null;
-                                const userIds = (clientsExist) ? projectManagers.concat(projectDevelopers).filter((vals)=>vals.userId!==-1).map((validInput)=>validInput.userId).concat(clients!.map((client)=>client.userId)) 
+                                let userIds = (clientsExist) ? projectManagers.concat(projectDevelopers).filter((vals)=>vals.userId!==-1).map((validInput)=>validInput.userId).concat(clients!.map((client)=>client.userId)) 
                                 : projectManagers.concat(projectDevelopers).filter((vals)=>vals.userId!==-1).map((validInput)=>validInput.userId);
 
 
                                 const project =  new Project(projectTitle, managers, clients, null, developers, projectDescription, timeConstraints );
+                                //filter for duplicates
+                                userIds = userIds.filter((id, index)=>{
                                 
+                                        let noMatch : boolean = true;
+
+                                        for(let i = index+1 ; i < userIds.length && noMatch ; i++){
+                                           noMatch = id !== userIds[i];
+                                        }
+
+                                        return noMatch;
+
+                                });
+
                                 firebaseClient.createProject(project, userIds ).then(()=>{
 
                                         LoadingStore.updateLoading();
