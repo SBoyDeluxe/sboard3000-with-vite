@@ -48,6 +48,29 @@ export function useMailboxContentStore() {
 export const UserStore = {
 
 
+  async getUserId(username : string){
+
+    
+      LoadingStore.updateLoading();
+      const idPromise = firebaseClient.getUserIds([username]).then((val)=>{
+
+        if(val[0] !== null){
+           LoadingStore.updateLoading();
+        console.log("Success on userstore get ids "+ val);
+        return val[0];
+        }
+        else{
+          throw new Error("No such username found in our database");
+        }
+       
+      }).catch(error=>{
+        LoadingStore.updateLoading();
+        throw new Error(error)});
+      return idPromise;
+ 
+      
+    }
+  }
 
   async signUpUser(username: string, password: string) {
 
