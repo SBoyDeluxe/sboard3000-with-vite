@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { themeContext } from '../context/ThemeContext';
-import { type ClickHandler } from './App';
 import { useContext } from 'react';
 /** A react element serving as the backdrop of some other component
  * 
@@ -19,7 +18,6 @@ import { useContext } from 'react';
 
         cssClassName : string,
 
-        clickHandler? : ClickHandler
 
 
 
@@ -27,7 +25,7 @@ import { useContext } from 'react';
     }
 
 
-export function Background({cssClassName,backgroundColor, children=null, clickHandler}:BackgroundProp){
+export function Background({cssClassName,backgroundColor, children=null}:BackgroundProp){
     
     const appThemeContext = useContext(themeContext);
         let backgroundColorIn = (backgroundColor) ? backgroundColor : appThemeContext.primaryBackgroundColor; 

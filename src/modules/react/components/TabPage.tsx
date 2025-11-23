@@ -1,7 +1,5 @@
-import { useContext } from "react"
-import { Header, type HeaderProps } from "./Header"
-import { TabRow, type TabRowProps } from "./TabRow"
-import { themeContext } from "../context/ThemeContext"
+import { type HeaderProps } from "./Header"
+import { type TabRowProps } from "./TabRow"
 import type { State } from "./App"
 
 

@@ -41,10 +41,10 @@ export function LoginForm({login,signUp,setFormState, formState,toggleState, }:L
     function handleInput(event: React.FormEvent<HTMLInputElement>){
           event.stopPropagation();
           
-        const nameOfChangingAttribute = event.target.name;
+        const nameOfChangingAttribute = event.currentTarget.name;
         setFormState(()=>{
             return {...formState,
-                [nameOfChangingAttribute] : event.target.value
+                [nameOfChangingAttribute] : event.currentTarget.value
                 
             }
         });
@@ -72,8 +72,8 @@ export function LoginForm({login,signUp,setFormState, formState,toggleState, }:L
     return(
         <Background cssClassName="login-form-container" backgroundColor={appThemeContext.secondaryBackgroundColor}>
                     <Form cssClassName="login-form" fieldSetOptions={ {children :TogglePair({toggleState})}} >
-                            <Input inputState={formState.username} cssClassName="username-input" inputType="text" labelName="Username : " name="username"   onEvent={handleChange} onInput={handleInput} ></Input>
-                            <Input inputState={formState.password} cssClassName="password-input" inputType="password" labelName="Password : " name="password" onEvent={handleChange} onInput={handleInput}  ></Input>
+                            <Input inputState={formState.username} cssClassName="username-input" inputType="text" labelName="Username : " name="username"   onEvent={handleChange}  ></Input>
+                            <Input inputState={formState.password} cssClassName="password-input" inputType="password" labelName="Password : " name="password" onEvent={handleChange}   ></Input>
 
                             <Button cssClassName={buttonCssString} children={<p>{buttonString}</p>} isDisabled={false} onClick={handleClick}/>
                       

@@ -1,14 +1,13 @@
-import Color from 'colorjs.io';
 import * as React from 'react';
 import { themeContext } from '../context/ThemeContext'
 import { useMemo } from 'react';
-import { Theme, ThemeValues } from '../../theme';
+import { ThemeValues } from '../../theme';
 import { FirebaseAPIClient } from '../../firebaseapiClient';
 import { LoginRegistrationPage } from '../pages/LoginRegistrationPage';
 import { Route, Routes, useNavigate } from "react-router-dom";
 import { LoggedInPage } from '../pages/LoggedInPage';
-import { firebaseClientContext, UserStore, useUserStore } from '../store/UserStore';
-import { LoadingStore, useLoadingStore } from './LoadingStore';
+import { firebaseClientContext, UserStore } from '../store/UserStore';
+import { LoadingStore } from './LoadingStore';
 
 
 
@@ -29,17 +28,7 @@ export type ClickHandler = {
 }
 
 
-/**
-      * An initialization function, this makes sure that the theme-state isn´t re-declared
-      * each re-render
-      * 
-      * @returns {ThemeValues}
-      */
-function initTheme() {
-        return Theme.generateTheme([new Color("#c4ccc8c2")], 0, 0)
 
-
-}
 
 /**
 * An initialization function, this makes sure that the theme-state isn´t re-declared
@@ -59,13 +48,13 @@ export type AppProps = {
         firebaseClient: FirebaseAPIClient
 }
 
-function catchError<T>(promise: Promise<T>): Promise<(T | undefined)[] | [Error]> {
+// function catchError<T>(promise: Promise<T>): Promise<(T | undefined)[] | [Error]> {
 
-        return promise.then((value) => { return [undefined, value] }).catch((error: Error) => {
+//         return promise.then((value) => { return [undefined, value] }).catch((error: Error) => {
 
-                return [error];
-        })
-}
+//                 return [error];
+//         })
+// }
 
 export function App({ }: AppProps): React.ReactNode {
         const appThemeContext = React.useContext(themeContext);
@@ -88,7 +77,7 @@ export function App({ }: AppProps): React.ReactNode {
                         navigate("/logged-in");
                 }
 
-        }, [loadingStore]);
+        }, [userStore]);
 
 
 

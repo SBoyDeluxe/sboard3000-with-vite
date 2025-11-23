@@ -29,12 +29,12 @@ export function FeatureTableRows({ feature, featureIndex, handleStatusChange }: 
     const activeTasks = getActiveDevelopmentTasks(feature);
     const pendingTasks = getPendingDevelopmentTasks(feature);
     const completedTasks = feature.developmentTasks!.filter((devTask) => (devTask.currentTaskStatus === "Completed"));
-    const numberOfPendingTasks = pendingTasks.length;
-    const numberOfActiveTasks = activeTasks.length;
+    const numberOfPendingTasks = pendingTasks!.length;
+    const numberOfActiveTasks = activeTasks!.length;
     const numberOfCompletedTasks = completedTasks.length;
     const appThemeContext = useContext(themeContext);
     let tableRows: ReactNode[] = [];
-    let assignedDevList: ReactNode = (<></>);
+    //let assignedDevList: ReactNode = (<></>);
     const refsForCompletedTasks = new Array(completedTasks.length);
 
     for (let i = 0; i < refsForCompletedTasks.length; i++) {
@@ -53,18 +53,18 @@ export function FeatureTableRows({ feature, featureIndex, handleStatusChange }: 
     //We will need one key for each row, since this is a mapping call
     const keysForTableRows = getKeysForList(new Array(amountOfDifferentTasks[0]));
     //We will also need one key per  task and type of task
-    const activeTaskKeys = getKeysForList(activeTasks);
-    const pendingTaskKeys = getKeysForList(pendingTasks);
+    const activeTaskKeys = getKeysForList(activeTasks!);
+    const pendingTaskKeys = getKeysForList(pendingTasks!);
     const completedTaskKeys = getKeysForList(new Array(numberOfCompletedTasks));
     //amountOfDifferentTasks[0] === amount of rows we need
     //We go down each row and try to add the completed, active and pending tasks in the order:
     //Pending (0)-> Active (1) -> Completed (2)
-    let activeTds = new Array(activeTasks.length);
-    if (activeTasks.length > 0) {
+    let activeTds = new Array(activeTasks!.length);
+    if (activeTasks!.length > 0) {
 
-        activeTasks.map((task, index) => {
+        activeTasks!.map((task, index) => {
 
-            activeTds[index] = (<td key={activeTaskKeys[index]}><div style={{ border: `medium inset ${appThemeContext.primaryBackgroundColor} ` }}><h5>{` ${task.timeconstraints._startdate} -> ${task.timeconstraints._enddate}`}</h5>
+            activeTds[index] = (<td key={activeTaskKeys[index]}><div style={{ border: `medium inset ${appThemeContext.primaryBackgroundColor} ` }}><h5>{` ${task.timeconstraints.startdate} -> ${task.timeconstraints.enddate}`}</h5>
                 <h5>{`${task.type}`}</h5>
 
                 <textarea disabled={false} defaultValue={task.description}>
@@ -113,10 +113,10 @@ export function FeatureTableRows({ feature, featureIndex, handleStatusChange }: 
 
         });
     }
-    let pendingdTds = new Array(pendingTasks.length);
-    if (pendingTasks.length > 0) {
+    let pendingdTds = new Array(pendingTasks!.length);
+    if (pendingTasks!.length > 0) {
 
-        pendingTasks.map((task, index) => {
+        pendingTasks!.map((task, index) => {
 
             pendingdTds[index] = <td key={pendingTaskKeys[index]}><div style={{ border: `medium inset ${appThemeContext.primaryBackgroundColor} ` }}><h5>{`${task.timeconstraints.startdate} -> ${task.timeconstraints.enddate}`}</h5>
                 <h5>{`${task.type}`}</h5>
@@ -191,8 +191,8 @@ export function FeatureTableRows({ feature, featureIndex, handleStatusChange }: 
         }
         tableRows[i] = (<Fragment key={keysForTableRows[i]}>
             <tr>
-                {(i < pendingTasks.length && pendingTasks.length > 0) ? pendingdTds[i] : (<td></td>)}
-                {(i < activeTasks.length && activeTasks.length > 0) ? activeTds[i] : (<td></td>)}
+                {(i < pendingTasks!.length && pendingTasks!.length > 0) ? pendingdTds[i] : (<td></td>)}
+                {(i < activeTasks!.length && activeTasks!.length > 0) ? activeTds[i] : (<td></td>)}
                 {(i < completedTasks.length && completedTasks.length > 0 && completedTaskSafeBool) ? completedTds[i] : (<td></td>)}
             </tr>
         </Fragment>);

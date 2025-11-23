@@ -26,9 +26,9 @@ export function AddTaskElement({ handleAddTask, features }: AddTaskElementProps)
             children: timeConstraintLegendText
         };
         const devAssignLegendText: ReactNode = (<><b><p>{"Assign Developers to task: "}</p></b></>);
-        const devAssignFieldSetOptions: FieldSetOptions = {
-            children: devAssignLegendText
-        };
+        // const devAssignFieldSetOptions: FieldSetOptions = {
+        //     children: devAssignLegendText
+        // };
 
         let featureKeys = getKeysForList(features);
 

@@ -10,10 +10,10 @@ import { type ClientInputData, type ParticipantInputData, useParticipantReducer 
 import { firebaseClient, UserStore } from "../store/UserStore";
 import { LoadingStore } from "./LoadingStore";
 import { Project } from "../../project";
-import { TimeConstraints } from "../../Timeconstraints";
 import { Manager, Developer, Client } from "../../User";
-import { ClientInput } from "./ClientInput";
-import { ParticipantInput } from "./ParticipantInput";
+import { ClientElement } from "./ClientElement";
+import { ParticipantElement } from "./ParticipantElement";
+import { TimeConstraints } from "../../Timeconstraints";
 export type CreateProjectTabProps = {
 
     createProjectState: {
@@ -61,7 +61,7 @@ export function CreateProjectTab(): ReactNode {
 
 
 
-    const createProjectText = (<p>{"Create Project"}</p>);
+    const createProjectText = (<h1>{"Create Project"}</h1>);
     const fieldSetDateLegendText = (<p>{"Start-date -> End-date :"}</p>);
     const participantsLegendText = (<p>{"Add participants :"}</p>);
     const appThemeContext = useContext(themeContext);
@@ -115,127 +115,134 @@ export function CreateProjectTab(): ReactNode {
         console.log(createProjectState);
         console.log(participantState);
 
-        createProject({ projectTitle: createProjectState.projectTitle, projectDescription: createProjectState.projectDescription }, { ...participantState },
-            { projectStartTime: createProjectState.projectStartTime, projectEndTime: createProjectState.projectEndTime });
-        // if (createProjectState.projectTitle && createProjectState.projectDescription && createProjectState.projectStartTime && createProjectState.projectEndTime && participantState.projectManagers && participantState.projectDevelopers ) {
-        //     createProject(createProjectState.projectTitle, createProjectState.projectDescription, createProjectState.projectStartTime, createProjectState.projectEndTime, participantState.projectManagers, participantState.projectDevelopers, participantState.projectClients);
-        // }
+        createProject({ projectTitle: createProjectState.projectTitle, projectDescription: createProjectState.projectDescription }, { ...participantState }, { projectStartTime: createProjectState.projectStartTime, projectEndTime: createProjectState.projectEndTime });
     }
+
+
 
 
 
 
     return (
-
-        <Form cssClassName="create-project-form" fieldSetOptions={fieldSetOptions} style={{
+        <>
+        <Form onSubmit={()=>{}}cssClassName="create-project-form" fieldSetOptions={fieldSetOptions} style={{
             backgroundColor: appThemeContext.primaryContentColor,
             border: `solid thin ${appThemeContext.secondaryContrastColor}`
         }}>
             <Input onEvent={handleChange} inputState={createProjectState.projectTitle} inputType="text" labelName="Title :" name="projectTitle" cssClassName="project-title-input" />
             <Input onEvent={handleChange} inputState={createProjectState.projectDescription} inputType="text" labelName="Project description :" name="projectDescription" cssClassName="project-description-input" />
+                        <hr></hr>
+            <h2>Time :</h2>
             <Input onEvent={handleChange} inputState={createProjectState.projectStartTime} inputType="datetime-local" labelName="Start time :" name="projectStartTime" cssClassName="project-start-time-input" />
             <Input onEvent={handleChange} inputState={createProjectState.projectEndTime} inputType="datetime-local" labelName="End time :" name="projectEndTime" cssClassName="project-end-time-input" />
-            <h3>Managers:</h3>
-            <ParticipantInput onSubmitUser={(usernameInput, userTypeInput, userId) => participantDispatch({ type: "ADD_MANAGER_INPUT_DATA", payload: { username: usernameInput, userType: userTypeInput, userId } })} onRemoveUserType={(usernameInput, userTypeToRemove) => { participantDispatch({ type: "REMOVE_MANAGER_USER_TYPE", payload: { username: usernameInput, userType: userTypeToRemove } }) }} onAddUserType={(usernameInput, userType) => { participantDispatch({ type: "ADD_MANAGER_USER_TYPE", payload: { username: usernameInput, userType: userType } }) }} onRemoveUser={(username) => { participantDispatch({ type: "REMOVE_MANAGER_INPUT_DATA", payload: { username: username } }) }} participantInputDataList={participantState.projectManagers}></ParticipantInput>
+                        <hr></hr>
+            <h2>Participants :</h2>
+
+            <ParticipantElement participantType="Managers" onSubmitUser={(usernameInput, userTypeInput, userId) => participantDispatch({ type: "ADD_MANAGER_INPUT_DATA", payload: { username: usernameInput, userType: userTypeInput, userId: userId } })} onRemoveUserType={(usernameInput, userId, userTypeToRemove) => { participantDispatch({ type: "REMOVE_MANAGER_USER_TYPE", payload: { username: usernameInput, userType: userTypeToRemove, userId: userId  } }) }} onAddUserType={(usernameInput, userId ,userType) => { participantDispatch({ type: "ADD_MANAGER_USER_TYPE", payload: { username: usernameInput, userType: userType, userId: userId  } }) }} onRemoveUser={(username,userId) => { participantDispatch({ type: "REMOVE_MANAGER_INPUT_DATA", payload: { username: username, userId: userId  } }) }} participantInputList={participantState.projectManagers}></ParticipantElement>
             <br></br>
-            <h3>Devs:</h3>
-            <ParticipantInput onSubmitUser={(usernameInput, userTypeInput, userId) => participantDispatch({ type: "ADD_DEVELOPER_INPUT_DATA", payload: { username: usernameInput, userType: userTypeInput, userId: userId } })} onRemoveUserType={(usernameInput, userTypeToRemove) => { participantDispatch({ type: "REMOVE_DEVELOPER_USER_TYPE", payload: { username: usernameInput, userType: userTypeToRemove } }) }} onAddUserType={(usernameInput, userType) => { participantDispatch({ type: "ADD_DEVELOPER_USER_TYPE", payload: { username: usernameInput, userType: userType } }) }} onRemoveUser={(username) => { participantDispatch({ type: "REMOVE_DEVELOPER_INPUT_DATA", payload: { username: username } }) }} participantInputDataList={participantState.projectDevelopers}></ParticipantInput>
+                        <hr></hr>
+
+            <ParticipantElement participantType="Developers" onSubmitUser={(usernameInput, userTypeInput, userId) => participantDispatch({ type: "ADD_DEVELOPER_INPUT_DATA", payload: { username: usernameInput, userType: userTypeInput, userId: userId } })} onRemoveUserType={(usernameInput,userId,userTypeToRemove) => { participantDispatch({ type: "REMOVE_DEVELOPER_USER_TYPE", payload: { username: usernameInput, userType: userTypeToRemove, userId: userId } }) }} onAddUserType={(usernameInput, userId,userType ) => { participantDispatch({ type: "ADD_DEVELOPER_USER_TYPE", payload: { username: usernameInput, userType: userType, userId: userId } }) }} onRemoveUser={(username, userId) => { participantDispatch({ type: "REMOVE_DEVELOPER_INPUT_DATA", payload: { username: username, userId: userId } }) }} participantInputList={participantState.projectDevelopers}></ParticipantElement>
             <br></br>
-            <h3>Clients</h3>
-            <ClientInput onSubmitUser={(username, userTypeInut, userId) => { participantDispatch({ type: "ADD_CLIENT_INPUT_DATA", payload: { username: username, userId: userId } }) }} onRemoveUser={(username) => { participantDispatch({ type: "REMOVE_CLIENT_INPUT_DATA", payload: { username: username } }) }} participantInputDataList={participantState.projectClients}></ParticipantInput>
+                        <hr></hr>
+
+            <ClientElement onSubmitClient={(username, userId) => { participantDispatch({ type: "ADD_CLIENT_INPUT_DATA", payload: { username: username, userId: userId } }) }} onRemoveClient={(username, userId) => { participantDispatch({ type: "REMOVE_CLIENT_INPUT_DATA", payload: { username: username, userId: userId } }); }} clientInputList={participantState.projectClients}></ClientElement>
+            <br></br>
+            <hr></hr>
             <Button isDisabled={false} cssClassName="create-project-submit-button" children={createProjectText} onClick={handleClick}></Button>
 
         </Form>
-
+    </>
 
     );
-}
-function createProject({ projectDescription, projectTitle, }: {
-    projectTitle: string;
-    projectDescription: string;
-}, { projectClients, projectDevelopers, projectManagers }: {
-    projectDevelopers: ParticipantInputData[];
-    projectManagers: ParticipantInputData[];
-    projectClients: ClientInputData[];
-}, { projectEndTime, projectStartTime }: {
-    projectStartTime: string;
-    projectEndTime: string;
-}): void {
 
-    LoadingStore.updateLoading();
-    //Maps project devs, managers and clients in accordance with the format specified in the create project-form
-    //The following should be known : Project always has at least 1 manager, all users added (inputData !== {"", ""|undefined, -1}) are verified users with userids
-    //Everything else must be checked -> startDate < endDate, endDate >=today, startDate, currentUser included in developers || managers (clientUsers can only be invited)
-    //projectTitle !== "" && projectDescription !== ""
-    //  handleProjectCreationAsync(projectClients, projectStartTime, projectEndTime, projectTitle, projectDescription, projectManagers, projectDevelopers);
-    //        const startDate = TimeConstraints.getLocalTimeParameters( new Date(projectStartTime));
-    //        const endDate = TimeConstraints.getLocalTimeParameters( new Date(projectEndTime));
-    //        const todaysDate = TimeConstraints.getLocalTimeParameters(new Date(Date.now())) ;
-    const currentUser = userStore;
-    const currentUserAsInput = { username: currentUser?.username.username, userId: currentUser?.authParameters.userId }
-    const allVariablesExist = (projectTitle.trim() !== "") && (projectDescription.trim() !== "") && (projectStartTime.trim() !== "") && (projectEndTime.trim() !== "") && (projectManagers.length >= 1) && (projectManagers[0].userId !== -1)
-        && ((projectManagers.filter((manager) => (manager.username === currentUserAsInput.username && manager.userId === currentUserAsInput.userId))[0] !== undefined) ||
-            (projectDevelopers.filter(dev => (dev.username === currentUserAsInput.username && dev.userId === currentUserAsInput.userId))[0] !== undefined) && (projectDevelopers.length >= 1)) && (projectDevelopers[0].userId !== -1);
-    if (allVariablesExist) {
-        const startDate = new Date(projectStartTime);
-        const endDate = new Date(projectEndTime);
-        const todaysDate = new Date(Date.now());
+    function createProject({ projectDescription, projectTitle, }: {
+        projectTitle: string;
+        projectDescription: string;
+    }, { projectClients, projectDevelopers, projectManagers }: {
+        projectDevelopers: ParticipantInputData[];
+        projectManagers: ParticipantInputData[];
+        projectClients: ClientInputData[];
+    }, { projectEndTime, projectStartTime }: {
+        projectStartTime: string;
+        projectEndTime: string;
+    }): void {
 
-
-        const datesAreValid = ((endDate.getTime() >= startDate.getTime()) && (endDate.getTime() >= todaysDate.getTime()));
-
-        if (datesAreValid) {
-            //All variables are valid -> We can now start construction of the project parameters
-            const timeConstraints = new TimeConstraints(startDate, endDate);
-
-            const managers = projectManagers.map((manager) => {
-
-                return new Manager(manager.userId, manager.username, manager.userType);
-            });
-            const developersExist = (projectDevelopers.filter((dev) => dev.userId !== -1)[0] !== undefined)
-            const developers = developersExist ? projectDevelopers.map((developer) => {
-
-                return new Developer(developer.userId, developer.username, developer.userType);
-            })
-                : null;
-
-            const clientsExist = (projectClients.filter((client) => (client.userId === -1 && client.username === ""))[0] === undefined);
-
-            const clients = (clientsExist) ? (projectClients.map((client) => new Client(client.username, client.userId))) : null;
-            let userIds = (clientsExist) ? projectManagers.concat(projectDevelopers).filter((vals) => vals.userId !== -1).map((validInput) => validInput.userId).concat(clients!.map((client) => client.userId))
-                : projectManagers.concat(projectDevelopers).filter((vals) => vals.userId !== -1).map((validInput) => validInput.userId);
+        LoadingStore.updateLoading();
+        //Maps project devs, managers and clients in accordance with the format specified in the create project-form
+        //The following should be known : Project always has at least 1 manager, all users added (inputData !== {"", ""|undefined, -1}) are verified users with userids
+        //Everything else must be checked -> startDate < endDate, endDate >=today, startDate, currentUser included in developers || managers (clientUsers can only be invited)
+        //projectTitle !== "" && projectDescription !== ""
+        //  handleProjectCreationAsync(projectClients, projectStartTime, projectEndTime, projectTitle, projectDescription, projectManagers, projectDevelopers);
+        //        const startDate = TimeConstraints.getLocalTimeParameters( new Date(projectStartTime));
+        //        const endDate = TimeConstraints.getLocalTimeParameters( new Date(projectEndTime));
+        //        const todaysDate = TimeConstraints.getLocalTimeParameters(new Date(Date.now())) ;
+        const currentUser = userStore;
+        const currentUserAsInput = { username: currentUser?.username.username, userId: currentUser?.authParameters.userId }
+        const allVariablesExist = (projectTitle.trim() !== "") && (projectDescription.trim() !== "") && (projectStartTime.trim() !== "") && (projectEndTime.trim() !== "") && (projectManagers.length >= 1) && (projectManagers[0].userId !== -1)
+            && ((projectManagers.filter((manager) => (manager.username === currentUserAsInput.username && manager.userId === currentUserAsInput.userId))[0] !== undefined) ||
+                (projectDevelopers.filter(dev => (dev.username === currentUserAsInput.username && dev.userId === currentUserAsInput.userId))[0] !== undefined) && (projectDevelopers.length >= 1)) && (projectDevelopers[0].userId !== -1);
+        if (allVariablesExist) {
+            const startDate = new Date(projectStartTime);
+            const endDate = new Date(projectEndTime);
+            const todaysDate = new Date(Date.now());
 
 
-            const project = new Project(projectTitle, managers, clients, null, developers, projectDescription, timeConstraints);
-            //filter for duplicates
-            userIds = userIds.filter((id, index) => {
+            const datesAreValid = ((endDate.getTime() >= startDate.getTime()) && (endDate.getTime() >= todaysDate.getTime()));
 
-                let noMatch: boolean = true;
+            if (datesAreValid) {
+                //All variables are valid -> We can now start construction of the project parameters
+                const timeConstraints = new TimeConstraints(startDate, endDate);
 
-                for (let i = index + 1; i < userIds.length && noMatch; i++) {
-                    noMatch = id !== userIds[i];
-                }
+                const managers = projectManagers.map((manager) => {
+                const timeConstraints = new TimeConstraints(startDate, endDate);
 
-                return noMatch;
+                    return new Manager(manager.userId, manager.username, manager.userType);
+                });
+                const developersExist = (projectDevelopers.filter((dev) => dev.userId !== -1)[0] !== undefined)
+                const developers = developersExist ? projectDevelopers.map((developer) => {
 
-            });
+                    return new Developer(developer.userId, developer.username, developer.userType);
+                })
+                    : null;
 
-            firebaseClient.createProject(project, userIds).then(() => {
+                const clientsExist = (projectClients.filter((client) => (client.userId === -1 && client.username === ""))[0] === undefined);
 
-                LoadingStore.updateLoading();
-                alert("Project created!");
-                console.log(project);
-            }).catch((error: Error) => alert(error));
+                const clients = (clientsExist) ? (projectClients.map((client) => new Client(client.username, client.userId))) : null;
+                let userIds = (clientsExist) ? projectManagers.concat(projectDevelopers).filter((vals) => vals.userId !== -1).map((validInput) => validInput.userId).concat(clients!.map((client) => client.userId))
+                    : projectManagers.concat(projectDevelopers).filter((vals) => vals.userId !== -1).map((validInput) => validInput.userId);
 
 
+                const project = new Project(projectTitle, managers, clients, null, developers, projectDescription, timeConstraints);
+                //filter for duplicates
+                userIds = userIds.filter((id, index) => {
+
+                    let noMatch: boolean = true;
+
+                    for (let i = index + 1; i < userIds.length && noMatch; i++) {
+                        noMatch = id !== userIds[i];
+                    }
+
+                    return noMatch;
+
+                });
+
+                firebaseClient.createProject(project, userIds).then(() => {
+
+                    LoadingStore.updateLoading();
+                    alert("Project created!");
+                    console.log(project);
+                }).catch((error: Error) => alert(error));
+
+
+            }
+        }
+
+        else {
+            LoadingStore.updateLoading();
+            alert("To create project the input must hold : Title, description, a start and end-time at least 1 project manager, at least 1 project developer (Can be the same user) and the creating user must be included as a developer, manager or both. \n \t Please, try again!")
         }
     }
-
-    else {
-        LoadingStore.updateLoading();
-        alert("To create project the input must hold : Title, description, a start and end-time at least 1 project manager, at least 1 project developer (Can be the same user) and the creating user must be included as a developer, manager or both. \n \t Please, try again!")
-    }
 }
 
-}
 

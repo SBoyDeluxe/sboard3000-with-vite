@@ -1,4 +1,4 @@
-import { ReactNode, StyleHTMLAttributes, useState } from "react";
+import { type ReactNode, type StyleHTMLAttributes, useState } from "react";
 
 export type DetailsProps = {
 
@@ -9,12 +9,12 @@ export type DetailsProps = {
 
 }
 
-export function Details({children, cssClassName, style,summaryContent}:DetailsProps){
+export function Details({children, cssClassName,summaryContent}:DetailsProps){
 
     const [isOpenState, setIsOpenState] = useState(false);
 
     return(
-            <details open={isOpenState} onChange={(e)=>setIsOpenState((prev)=>!prev)}>
+            <details  className={cssClassName}  open={isOpenState} onChange={()=>setIsOpenState((prev)=>!prev)}>
                 <summary>{summaryContent}</summary>
                 {children}
           </details>)

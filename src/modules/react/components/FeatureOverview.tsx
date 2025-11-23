@@ -62,7 +62,7 @@ export function FeatureOverview({ dispatchAction, features, projectDevs }: Featu
         const keysForFeatures = getKeysForList(features);
         let assignedDevList: ReactNode = (<></>);
         const appThemeContext = useContext(themeContext);
-        let tableRows = (<></>);
+        //let tableRows = (<></>);
         let content: ReactNode = features.map((feature, index) => {
             // let devsNotInFeature = getDevsNotInFeature(projectDevs, feature);
             // let devData: DeveloperAssignmentData = { developerOptions: devsNotInFeature, indicesSelected: [0] };
@@ -94,7 +94,7 @@ export function FeatureOverview({ dispatchAction, features, projectDevs }: Featu
                                 <strong>Assigned task developers : </strong>
                                 <ul> {
                                     task.assignedDevelopers.map((dev, index) => {
-                                        return (<li key={keysForList[index]}>{dev.username}</li>)
+                                        return (<li key={keysForList![index]}>{dev.username}</li>)
                                     })}
                                 </ul>
 

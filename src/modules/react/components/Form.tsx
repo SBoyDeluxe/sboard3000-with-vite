@@ -1,5 +1,4 @@
-import { type CSSProperties, useContext } from "react"
-import { themeContext } from "../context/ThemeContext"
+import { type CSSProperties } from "react"
 import React from "react"
 
 export type FormProps = {
@@ -19,15 +18,15 @@ export type FieldSetOptions = {
     textColor?: string
 
 }
-export function Form({ cssClassName, onSubmit, children = null, fieldSetOptions = null }: FormProps) {
+export function Form({ cssClassName,  children = null, fieldSetOptions = undefined }: FormProps) {
 
-    let appThemeContext = useContext(themeContext);
-    switch ((fieldSetOptions !== (null))) {
+    //let appThemeContext = useContext(themeContext);
+    switch ((typeof fieldSetOptions !== "undefined")) {
 
         case true: {
             return (<>   <form className={cssClassName} >
                 <fieldset>
-                    <legend>    {fieldSetOptions.children} </legend>
+                    <legend>    {fieldSetOptions!.children} </legend>
 
                     {children}
 

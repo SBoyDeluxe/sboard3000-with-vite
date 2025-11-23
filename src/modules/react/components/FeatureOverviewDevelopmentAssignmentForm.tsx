@@ -15,7 +15,7 @@ export type FeatureOveriewDeveloperAssigmentFormProp = {
 
 }
 
-export function FeatureOveriewDeveloperAssigmentForm({ projectDevs, dispatchAction, feature, featureIndex, children }: FeatureOveriewDeveloperAssigmentFormProp) {
+export function FeatureOveriewDeveloperAssigmentForm({ projectDevs, dispatchAction, feature, featureIndex }: FeatureOveriewDeveloperAssigmentFormProp) {
 
 
     const devOptions = getDevsNotInFeature(projectDevs, feature);
@@ -40,7 +40,7 @@ export function FeatureOveriewDeveloperAssigmentForm({ projectDevs, dispatchActi
         //              
         //      }
 
-        const devsToAssign = devOptions.filter((val: Developer, index: number) => {
+        const devsToAssign = devOptions.filter((_val: Developer, index: number) => {
             let isInSelectedIndices: boolean = false;
 
             indicesOfSelectedDevs.forEach((selectedIndex) => {
@@ -86,11 +86,11 @@ export function FeatureOveriewDeveloperAssigmentForm({ projectDevs, dispatchActi
     //     }});
     // }
 
-    function getDevsNotInFeature(projectDevs: Developer[], feature: Feature) {
+    function getDevsNotInFeature(projectDevs: Developer[], feature: Feature):Developer[] {
 
 
         //Check if there are any devs assigned to feature
-        const devsInFeature: boolean = (feature.assignedDevelopers);
+        const devsInFeature: boolean = (feature.assignedDevelopers!==null);
         if (devsInFeature) {
 
             //Get all projectDevs not already in feature
@@ -111,7 +111,7 @@ export function FeatureOveriewDeveloperAssigmentForm({ projectDevs, dispatchActi
                 return isNotAlreadyInFeature;
             });
 
-            return (featureDevOptions.length > 0) ? featureDevOptions : [null];
+            return (featureDevOptions.length > 0) ? featureDevOptions : [];
 
         }
         else {
