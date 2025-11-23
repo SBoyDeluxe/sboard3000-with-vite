@@ -35,9 +35,9 @@ export function AddFeaturesElement({ onSubmitFeature, projectDevTeam }: AddFeatu
     };
 
     //generate keys for each list item
-    let keys: Key[] = new Array(projectDevTeam?.length * 2);
+    let keys: Key[] = new Array(projectDevTeam!.length * 2);
 
-    for (let i = 0; i < projectDevTeam?.length * 2; i++) {
+    for (let i = 0; i < projectDevTeam!.length * 2; i++) {
 
         keys[i] = window.crypto.randomUUID();
     }

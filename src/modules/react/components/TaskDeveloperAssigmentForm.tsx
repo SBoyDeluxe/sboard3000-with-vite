@@ -1,7 +1,6 @@
-import { type ReactNode, useState } from "react";
+import { useState } from "react";
 import { Task } from "../../Task";
 import { Developer } from "../../User";
-import { getKeysForList } from "./ProjectsTab";
 import { DeverloperAssignmentForm } from "./AddTaskElement";
 import { Button } from "./Button";
 
@@ -67,15 +66,13 @@ export function TaskDeveloperAssignmentForm({ featureIndex, developmentTask, dev
 
 
 
-            return (featureDevsNotInTask.length > 0) ? featureDevsNotInTask : [null];
-        } else {
-            return featureDevelopers;
-        }
+            return (featureDevsNotInTask.length > 0) ? featureDevsNotInTask : featureDevelopers;
+        } 
 
     }
 
 
-    function getSelectedDevs(indicesSelected: number[], devOptions: Developer[]) {
+    function getSelectedDevs(indicesSelected: number[], devOptions: Developer[]) : Developer[] {
 
         return devOptions.filter((_dev, index) => {
 

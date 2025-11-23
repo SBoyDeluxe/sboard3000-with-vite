@@ -1,4 +1,4 @@
-import { useContext, useEffect, useSyncExternalStore, Key, useReducer, Fragment } from "react";
+import { useContext, useEffect, useSyncExternalStore, type Key, useReducer, Fragment } from "react";
 import { Developer } from "../../User";
 import { MailboxStore, ProjectStore } from "../store/UserStore";
 import { Project } from "../../project";
@@ -6,7 +6,6 @@ import { useLoadingStore } from "./LoadingStore";
 import { Background } from "./background";
 import { themeContext } from "../context/ThemeContext";
 import { ProgressBar } from "./ProgressBar";
-import { TimeConstraints } from "../../Timeconstraints";
 import { Button } from "./Button";
 import { FeatureReducer } from "./reducers/FeatureReducer";
 import { Feature } from "../../feature";
@@ -16,6 +15,8 @@ import { AddTaskElement } from "./AddTaskElement";
 import { ProjectSchedule } from "./ProjectSchedule";
 import { FeatureOverview } from "./FeatureOverview";
 import { Details } from "./Details";
+import { TimeConstraints } from "../../Timeconstraints";
+
 
 
 
@@ -32,7 +33,7 @@ export function ProjectsTab() {
     const projectStore = useSyncExternalStore(ProjectStore.subscribe, ProjectStore.getSnapshotProjects);
     const mailBoxStore = useSyncExternalStore(MailboxStore.subscribe, MailboxStore.getSnapshotMailbox);
     let loadingStore = useLoadingStore();
-    const appThemeContext = useContext(themeContext);
+    //const appThemeContext = useContext(themeContext);
     useEffect(() => {
         ProjectStore.getProjects();
     }, [ ,mailBoxStore]);
@@ -40,7 +41,7 @@ export function ProjectsTab() {
     //  useEffect(() => ProjectStore.getProjects, []);
     let activeProjects: Project[] | null = projectStore;
 
-    const [state, dispatcher] = useReducer(FeatureReducer, null);
+   // const [state, dispatcher] = useReducer(FeatureReducer, null);
 
 
 
@@ -124,7 +125,9 @@ type ProjectViewProps = {
 }
 
 function ProjectView({ project }: ProjectViewProps) {
-    const appThemeContext = useContext(themeContext);
+    const appThemeContext = useContext(themeContext);    
+    const [state, dispatcher] = useReducer(FeatureReducer, project.features);
+
 
     function handleSubmitFeature(title: string, description: string, type: string, timeconstraints: TimeConstraints, developersAssigned: Developer[] | null) {
 
@@ -153,7 +156,7 @@ function ProjectView({ project }: ProjectViewProps) {
     function handleUpdateProject(newFeatures: Feature[] | null) {
         if (newFeatures !== null) {
             for (let i = 0; i < newFeatures?.length; i++) {
-                let featureToAdd = new Feature(newFeatures[i].title, newFeatures[i].type, newFeatures[i].description, newFeatures[i].timeconstraints, newFeatures[i].developmentTasks, newFeatures[i].assignedDevelopers);
+                let featureToAdd = new Feature(newFeatures[i].title, newFeatures[i].type, newFeatures[i].description, newFeatures[i].timeconstraints, newFeatures[i].developmentTasks!, newFeatures[i].assignedDevelopers);
                 project.addFeature(featureToAdd);
             }
         }
@@ -162,20 +165,19 @@ function ProjectView({ project }: ProjectViewProps) {
 
 
 
-    const [state, dispatcher] = useReducer(FeatureReducer, project.features);
 
 
 
     function getTimeFraction(timeConstraints: TimeConstraints) {
 
-        const startDate = Date.parse(timeConstraints._startdate);
-        const endDate = Date.parse(timeConstraints._enddate);
+        const startDate = Date.parse(timeConstraints.startdate);
+        const endDate = Date.parse(timeConstraints.enddate);
 
         const currentDate = Date.now();
 
-        const totalTime = endDate - startDate;
+        const totalTime = endDate.valueOf() - startDate.valueOf();
 
-        const timePassed = currentDate - startDate;
+        const timePassed = currentDate - startDate.valueOf();
 
         return timePassed / totalTime * 100;
 
@@ -186,7 +188,7 @@ function ProjectView({ project }: ProjectViewProps) {
 
         <ProgressBar barColor={appThemeContext.tertiaryContrastColor} progress={(getTimeFraction(project.timeconstraints))} />
 
-        <Details cssClassName="project-details-element" summaryContent={<b>{`${project.title} : ${project.timeconstraints._startdate} -> ${project.timeconstraints._enddate}`} </b>} >
+        <Details cssClassName="project-details-element" summaryContent={<b>{`${project.title} : ${TimeConstraints.getAsFormattedString(new Date(Date.parse(project.timeconstraints.startdate)))} -> ${TimeConstraints.getAsFormattedString(new Date(Date.parse(project.timeconstraints.enddate)))}`} </b>} >
 
             <h4>Description : </h4>
             <textarea defaultValue={`${project.description}`} disabled={false}>
@@ -249,7 +251,7 @@ function ProjectView({ project }: ProjectViewProps) {
  * @param list - list of elements needing keys
  * @returns Generated keys for all list members
  */
-export function getKeysForList(list: Array<T>) {
+export function getKeysForList(list: Array<Object>) {
     const numberOfMembersInlist = list.length;
 
     let keysNeededForList: Key[] = new Array<Key>(numberOfMembersInlist);

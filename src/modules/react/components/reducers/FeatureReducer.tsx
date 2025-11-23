@@ -1,16 +1,15 @@
-import { useReducer } from "react";
 import { Feature } from "../../../feature";
 
 
 
-function useFeatureReducer() {
-    const features: Feature[] | null = null;
+// function useFeatureReducer() {
+//     const features: Feature[] | null = null;
 
-    return useReducer(FeatureReducer, features);
+//     return useReducer(FeatureReducer, features);
 
 
 
-}
+// }
 
 /**
  * 
@@ -129,7 +128,7 @@ export function FeatureReducer(features: Feature[] | null, action: { type: strin
                     let featureToAssignDevsTo = features[index];
                     featureToAssignDevsTo.assignDevelopers(action.payload.developersToAssign, null);
 
-                    const arrayOfOtherFeatures = features.filter((feature, indexToCheck: number) => (indexToCheck !== index));
+                    const arrayOfOtherFeatures = features.filter((_feature, indexToCheck: number) => (indexToCheck !== index));
 
                     const newFeatureArray = (features.length > 1) ? (arrayOfOtherFeatures.concat(featureToAssignDevsTo)) : [featureToAssignDevsTo];
 
@@ -176,7 +175,7 @@ export function FeatureReducer(features: Feature[] | null, action: { type: strin
                     featureToComplete.completeFeature();
 
 
-                    const returnElement = (features.length > 1) ? features.filter((val, valIndex) => (valIndex !== index)).concat(featureToComplete) : [featureToComplete];
+                    const returnElement = (features.length > 1) ? features.filter((_val, valIndex) => (valIndex !== index)).concat(featureToComplete) : [featureToComplete];
                     returnArray = returnElement;
                 } else {
 
@@ -224,7 +223,7 @@ export function FeatureReducer(features: Feature[] | null, action: { type: strin
 
                 if(isValid){
 
-                   const timeConstraints = action.payload.timeconstraints;     
+                  // const timeConstraints = action.payload.timeconstraints;     
                    const featureIndex = action.payload.featureIndex;     
                    const devTaskToAdd = action.payload.devTask;
                    
@@ -336,7 +335,7 @@ export function FeatureReducer(features: Feature[] | null, action: { type: strin
                 if (typeof action.payload.featureIndex === "number") {
                     //If features.length === 1 we won´t be able to run filter
                     const isOnlyOneFeature = (features.length === 1);
-                    const index = action.payload.featureIndex;
+                    //const index = action.payload.featureIndex;
 
 
 
@@ -354,7 +353,7 @@ export function FeatureReducer(features: Feature[] | null, action: { type: strin
                             returnArray = [featureToCompleteTaskIn];
                         }
                         else {
-                            const otherFeatures = features.filter((feat, fIndex) => (fIndex !== featureIndex));
+                            const otherFeatures = features.filter((_feat, fIndex) => (fIndex !== featureIndex));
 
                             returnArray = [...otherFeatures, featureToCompleteTaskIn];
                         }
@@ -369,10 +368,10 @@ export function FeatureReducer(features: Feature[] | null, action: { type: strin
                             returnArray = [featureToSetStatusForTaskIn];
                         }
                         else {
-                            let featureToSetStatusForTaskIn = features.filter((feat, featIndex) => (featIndex === featureIndex))[0];
+                            let featureToSetStatusForTaskIn = features.filter((_feat, featIndex) => (featIndex === featureIndex))[0];
                             featureToSetStatusForTaskIn.developmentTasks![devTaskIndex].currentTaskStatus = newStatus;
 
-                            const otherFeatures = features.filter((feat, fIndex) => (fIndex !== featureIndex));
+                            const otherFeatures = features.filter((_feat, fIndex) => (fIndex !== featureIndex));
 
                             returnArray = [...otherFeatures, featureToSetStatusForTaskIn];
                         }

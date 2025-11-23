@@ -89,7 +89,7 @@ export function Input({placeHolder=undefined, min=undefined, max=undefined,input
     else if(onInput){
           children =  (<>
                 <label htmlFor={name} className={labelName} > <p>{labelName}</p>
-                        <input  placeholder={placeHolder}  min={min} max={max} value = {inputState} onInput={(e)=>onInput(e)}  type={inputType} name={name} className={cssClassName}>
+                        <input  placeholder={placeHolder}  min={min} max={max} value = {inputState} onInput={onInput}  type={inputType} name={name} className={cssClassName}>
 
                         </input>
 
@@ -101,7 +101,7 @@ export function Input({placeHolder=undefined, min=undefined, max=undefined,input
 
                    children =  (<>
                 <label htmlFor={name} className={labelName} > <p>{labelName}</p>
-                        <input  placeholder={placeHolder}  min={min} max={max} value = {inputState}   type={inputType} name={name} className={cssClassName} onChange={(e)=>onEvent}>
+                        <input  placeholder={placeHolder}  min={min} max={max} value = {inputState}   type={inputType} name={name} className={cssClassName} onChange={onEvent}>
 
                         </input>
 

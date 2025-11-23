@@ -48,122 +48,123 @@ export function useMailboxContentStore() {
 export const UserStore = {
 
 
-  async getUserId(username : string){
+  async getUserId(username: string) {
 
-    
-      LoadingStore.updateLoading();
-      const idPromise = firebaseClient.getUserIds([username]).then((val)=>{
 
-        if(val[0] !== null){
-           LoadingStore.updateLoading();
-        console.log("Success on userstore get ids "+ val);
-        return val[0];
-        }
-        else{
-          throw new Error("No such username found in our database");
-        }
-       
-      }).catch(error=>{
+    LoadingStore.updateLoading();
+    const idPromise = await firebaseClient.getUserIds([username]).then((val) => {
+
+      if (val[0] !== null) {
         LoadingStore.updateLoading();
-        throw new Error(error)});
-      return idPromise;
- 
-      
-    }
-  }
+        console.log("Success on userstore get ids " + val);
+        return val[0];
+      }
+      else {
+        throw new Error("No such username found in our database");
+      }
+
+    }).catch(error => {
+      LoadingStore.updateLoading();
+      throw new Error(error)
+    });
+    return idPromise;
+
+
+  },
+
 
   async signUpUser(username: string, password: string) {
 
 
-    LoadingStore.updateLoading();
-    try {
-      await firebaseClient.signUp(username, password).then((newUser) => {
-        LoadingStore.updateLoading();
-        user = newUser;
-        emitChangeUser();
+  LoadingStore.updateLoading();
+  try {
+    await firebaseClient.signUp(username, password).then((newUser) => {
+      LoadingStore.updateLoading();
+      user = newUser;
+      emitChangeUser();
 
-        //If logged in user we want to add the 
+      //If logged in user we want to add the 
 
-      }).catch((error => { throw error }));
-    } catch (error: unknown) {
-      if (error instanceof Error) {
-        LoadingStore.updateLoading();
-
-        alert(error.message);
-
-      }
-
-    }
-
-
-  },
-  async login(username: string, password: string) {
-    LoadingStore.updateLoading();
-    try {
-      await firebaseClient.loginUser(username, password).then((newUser) => {
-        LoadingStore.updateLoading();
-        user = newUser;
-        emitChangeUser();
-
-
-      }).catch((error) => { throw error });
-    } catch (error: unknown) {
-      if (error instanceof Error) {
-
-        LoadingStore.updateLoading();
-
-        //Indicates password was wrong
-        if (error.name.match("OperationError")) {
-
-          alert("That password/username combination was not found in our database, please try again");
-
-        } else {
-
-          alert(error);
-
-        }
-
-
-      }
-
-    }
-
-  },
-  async logOut() {
-    LoadingStore.updateLoading();
-
-    await firebaseClient.logOut().then(() => {
+    }).catch((error => { throw error }));
+  } catch (error: unknown) {
+    if (error instanceof Error) {
       LoadingStore.updateLoading();
 
-      user = null;
+      alert(error.message);
+
+    }
+
+  }
+
+
+},
+  async login(username: string, password: string) {
+  LoadingStore.updateLoading();
+  try {
+    await firebaseClient.loginUser(username, password).then((newUser) => {
+      LoadingStore.updateLoading();
+      user = newUser;
       emitChangeUser();
 
 
-    });
+    }).catch((error) => { throw error });
+  } catch (error: unknown) {
+    if (error instanceof Error) {
 
-  },
-  subscribe(listener: any) {
-    listernersUserStore = [...listernersUserStore, listener];
-    return () => {
-      listernersUserStore = listernersUserStore.filter(l => l !== listener);
+      LoadingStore.updateLoading();
+
+      //Indicates password was wrong
+      if (error.name.match("OperationError")) {
+
+        alert("That password/username combination was not found in our database, please try again");
+
+      } else {
+
+        alert(error);
+
+      }
+
+
     }
-  },
-  getSnapshotUser() {
-
-    return user;
 
   }
+
+},
+  async logOut() {
+  LoadingStore.updateLoading();
+
+  await firebaseClient.logOut().then(() => {
+    LoadingStore.updateLoading();
+
+    user = null;
+    emitChangeUser();
+
+
+  });
+
+},
+subscribe(listener: any) {
+  listernersUserStore = [...listernersUserStore, listener];
+  return () => {
+    listernersUserStore = listernersUserStore.filter(l => l !== listener);
+  }
+},
+getSnapshotUser() {
+
+  return user;
+
+}
 
 
 }
 
 
 export const MailboxStore = {
-   emitChangeMailbox() {
-  for (let listener of listernMailboxStore) {
-    listener();
-  }
-},
+  emitChangeMailbox() {
+    for (let listener of listernMailboxStore) {
+      listener();
+    }
+  },
 
   subscribe(listener: any) {
     listernMailboxStore = [...listernMailboxStore, listener];

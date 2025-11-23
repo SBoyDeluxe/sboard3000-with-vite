@@ -55,8 +55,8 @@ export function ProjectSchedule({ features, projectDevs }: { features: Feature[]
                 const activeTasks = getActiveDevelopmentTasks(feature);
                 const pendingTasks = getPendingDevelopmentTasks(feature);
                 const completedTasks = feature.developmentTasks!.filter((devTask) => (devTask.currentTaskStatus === "Completed"));
-                const numberOfPendingTasks = pendingTasks.length;
-                const numberOfActiveTasks = activeTasks.length;
+                const numberOfPendingTasks = pendingTasks!.length;
+                const numberOfActiveTasks = activeTasks!.length;
                 const numberOfCompletedTasks = completedTasks.length;
 
 
@@ -69,14 +69,14 @@ export function ProjectSchedule({ features, projectDevs }: { features: Feature[]
                 //We will need one key for each row, since this is a mapping call
                 const keysForTableRows = getKeysForList(new Array(amountOfDifferentTasks[0]));
                 //We will also need one key per  task and type of task
-                const activeTaskKeys = getKeysForList(activeTasks);
-                const pendingTaskKeys = getKeysForList(pendingTasks);
+                const activeTaskKeys = getKeysForList(activeTasks!);
+                const pendingTaskKeys = getKeysForList(pendingTasks!);
                 const completedTaskKeys = getKeysForList(new Array(numberOfCompletedTasks));
 
-                let activeTds = new Array(activeTasks.length);
-                if (activeTasks.length > 0) {
+                let activeTds = new Array(activeTasks!.length);
+                if (activeTasks!.length > 0) {
 
-                    activeTasks.map((task, index) => {
+                    activeTasks!.map((task, index) => {
 
                         activeTds[index] = (<td key={activeTaskKeys[index]}><div style={{ border: `medium inset ${appThemeContext.primaryBackgroundColor} ` }}><h5>{`${task.timeconstraints.startdate} -> ${task.timeconstraints.enddate}`}</h5>
                             <h5>{`${task.type}`}</h5>
