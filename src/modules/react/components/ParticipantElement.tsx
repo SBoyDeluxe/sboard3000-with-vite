@@ -68,12 +68,12 @@ export function ParticipantElement({ onRemoveUser, onAddUserType, onRemoveUserTy
 
     return (<>
         <h3>{participantType} </h3>
-        {!participantListEmpty ? (userList) : (<></>)}
-        <Input cssClassName="add-client-username-input" labelName="Enter username :" name="usernameInput" inputState={inputState.usernameInput} onEvent={handleInputFieldChange} inputType="text" />
+         {userList}
+        <Input cssClassName={`add-${participantType.substring(0,participantType.length-1).toLocaleLowerCase()}-username-input`} labelName="Enter username :" name="usernameInput" inputState={inputState.usernameInput} onEvent={handleInputFieldChange} inputType="text" />
         <Button cssClassName="add-user-button" isDisabled={false} onClick={handleAddUserClick}>
             {"Add User:"}
         </Button>
-        {!participantListEmpty ? (<><UserTypeInputElement setSelectedUserTypes={setSelectedUserTypes} selectedUserTypesState={selectedUserTypes} removeUserTypeButton={removeUserTypeButton} selectedUser={getSelectedUser(participantInputList, selectedUsernameState)} onChange={handleInputFieldChange} participantInputList={participantInputList} userTypeInputState={inputState.userTypeInput}>
+        {!participantListEmpty ? (<><UserTypeInputElement setSelectedUserTypes={setSelectedUserTypes} selectedUserTypesState={selectedUserTypes} removeUserTypeButton={removeUserTypeButton} selectedUser={getSelectedUser(participantInputList, selectedUsernameState)} onChange={handleInputFieldChange}  userTypeInputState={inputState.userTypeInput}>
 
         </UserTypeInputElement>
             <Button isDisabled={false} cssClassName="add-user-type-button" onClick={handleAddUserTypeClick}>
@@ -162,7 +162,7 @@ export function ParticipantElement({ onRemoveUser, onAddUserType, onRemoveUserTy
         } else if (inputState.usernameInput.trim() == "") {
             alert("Username field cannot be empty, please try again!");
         } else if (participantInputList.filter((participant) => participant.username === inputState.usernameInput).length > 0) {
-            alert(`${inputState.usernameInput} is already added as a ${participantType}, please try with another username!`);
+            alert(`${inputState.usernameInput} is already added as a ${participantType.substring(0,participantType.length-1)}, please try with another username!`);
         }
 
     }
@@ -173,6 +173,7 @@ export function ParticipantElement({ onRemoveUser, onAddUserType, onRemoveUserTy
         event.stopPropagation();
         //Add rinse field and set new selected username
         onRemoveUser(selectedUsernameState, getSelectedUser(participantInputList, selectedUsernameState).userId);
+        setSelectedUsernameState(participantInputList[0].username);
 
     }
     function handleAddUserTypeClick(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
@@ -216,7 +217,6 @@ export function ParticipantElement({ onRemoveUser, onAddUserType, onRemoveUserTy
 }
 
 type UserTypeInputElementProps = {
-    participantInputList: ParticipantInputData[],
     userTypeInputState: string,
     onChange: ((e: React.ChangeEvent<HTMLInputElement>) => void),
     selectedUserTypesState: string[],
@@ -224,53 +224,53 @@ type UserTypeInputElementProps = {
     selectedUser: ParticipantInputData,
     removeUserTypeButton: ReactNode
 }
-function UserTypeInputElement({ onChange, participantInputList, userTypeInputState, selectedUser, selectedUserTypesState, setSelectedUserTypes, removeUserTypeButton }: UserTypeInputElementProps) {
+function UserTypeInputElement({ onChange,  userTypeInputState, selectedUser, selectedUserTypesState, setSelectedUserTypes, removeUserTypeButton }: UserTypeInputElementProps) {
 
     //List of all user types to exist as suggestions for user
-    let allCurrentUserTypes: ReactNode = (<></>);
+  //  let allCurrentUserTypes: ReactNode = (<></>);
 
 
     //Only if we have added participants do we want to render the list
-    const participantListEmpty = participantInputList[0].userId == -1;
+   // const participantListEmpty = participantInputList[0].userId == -1;
 
     const selectedUserHasUsertypes = (selectedUser.userType[0] !== "" && selectedUser.userType.length !== 0);
 
-    if (!participantListEmpty) {
+    // if (!participantListEmpty) {
 
 
 
-        //If we have user types we want to add them so we can suggest them to the user
-        let allUserTypes: string[] = participantInputList.flatMap((participant: ParticipantInputData) => {
-            return participant.userType;
-        });
+    //     //If we have user types we want to add them so we can suggest them to the user
+    //     let allUserTypes: string[] = participantInputList.flatMap((participant: ParticipantInputData) => {
+    //         return participant.userType;
+    //     });
 
-        let allUserTypesNoDoubles: string[];
+    //     let allUserTypesNoDoubles: string[];
 
-        if (allUserTypes.length > 0) {
-            allUserTypesNoDoubles = allUserTypes.filter((userType: string, index: number) => {
-                let notADouble = true;
-                for (let i = index; i < allUserTypes.length && notADouble; i++) {
-                    notADouble = (userType !== allUserTypes[i]);
+    //     if (allUserTypes.length > 0) {
+    //         allUserTypesNoDoubles = allUserTypes.filter((userType: string, index: number) => {
+    //             let notADouble = true;
+    //             for (let i = index; i < allUserTypes.length && notADouble; i++) {
+    //                 notADouble = (userType !== allUserTypes[i]);
 
-                }
-                //Returns true if no double, false otherwise
-                return notADouble;
-            });
+    //             }
+    //             //Returns true if no double, false otherwise
+    //             return notADouble;
+    //         });
 
-            const keysForUserTypes = getKeysForList(allUserTypesNoDoubles);
-            const allUserTypeOptions = allUserTypesNoDoubles.map((userType: string, index: number) => {
-                return (<option key={keysForUserTypes[index]} value={userType}>{userType}</option>);
-            });
+    //         const keysForUserTypes = getKeysForList(allUserTypesNoDoubles);
+    //         const allUserTypeOptions = allUserTypesNoDoubles.map((userType: string, index: number) => {
+    //             return (<option key={keysForUserTypes[index]} value={userType}>{userType}</option>);
+    //         });
 
-            allCurrentUserTypes = (<datalist id="userTypeSuggestionList">
-                {allUserTypeOptions}
-            </datalist>);
+    //         allCurrentUserTypes = (<datalist id="userTypeSuggestionList">
+    //             {allUserTypeOptions}
+    //         </datalist>);
 
 
 
-        }
+    //     }
 
-    }
+    // }
     let userTypeSelection: ReactNode = (<></>);
 
     if (selectedUserHasUsertypes) {
@@ -306,7 +306,7 @@ function UserTypeInputElement({ onChange, participantInputList, userTypeInputSta
 
     }
 
-    return (participantListEmpty ? (<>
+    return (!selectedUserHasUsertypes ? (<>
     <h4>User types:</h4>
     <Input cssClassName="user-type-input" labelName="User-type:" name="userTypeInput" inputState={userTypeInputState} inputType="text" onEvent={onChange}>
     </Input>
@@ -314,6 +314,6 @@ function UserTypeInputElement({ onChange, participantInputList, userTypeInputSta
         {userTypeSelection}
         <Input cssClassName="user-type-input" list="userTypeSuggestionList" labelName="User-type:" name="userTypeInput" inputState={userTypeInputState} inputType="text" onEvent={onChange}>
         </Input>
-        {allCurrentUserTypes}</>))
+       </>))
 
 }

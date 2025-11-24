@@ -18,10 +18,10 @@ export function useParticipantReducer() {
     return useReducer(ParticipantInputReducer, initState);
 }
 
-function getInitState() {
-    let projectManagers: ParticipantInputData[] = [{ username: "", userType: [""], userId: -1 }];
+ export function getInitState() {
+    let projectManagers: ParticipantInputData[] =   [{ username: "", userType: [""], userId: -1 }];
     let projectDevelopers: ParticipantInputData[] = [{ username: "", userType: [""], userId: -1 }];
-    let projectClients: ClientInputData[] = [{ username: "", userId: -1 }];
+    let projectClients: ClientInputData[] =                         [{ username: "", userId: -1 }];
     //The creating user is implicitly manager of the project 
     // const loggedInUser = UserStore.getSnapshotUser();
     // projectManagers[0] = { username: loggedInUser?.username.username!, userType: ["Creator"], userId: loggedInUser?.authParameters.userId! };
@@ -34,7 +34,7 @@ function getInitState() {
     return initState;
 }
 
-function ParticipantInputReducer(participantsState: {
+export function ParticipantInputReducer(participantsState: {
     projectManagers: ParticipantInputData[],
     projectDevelopers: ParticipantInputData[],
     projectClients: ClientInputData[],
@@ -183,12 +183,20 @@ function ParticipantInputReducer(participantsState: {
             if (projectDevelopersIsUninitiated) {
                 returnState = {
                     ...participantsState,
-                    projectDevelopers: [action.payload]
+                    projectDevelopers: [{
+                        username: action.payload.username,
+                        userType: action.payload.userType,
+                        userId: action.payload.userId
+                    }]
                 }
             } else {
                 returnState = {
                     ...participantsState,
-                    projectDevelopers: participantsState.projectManagers.concat(action.payload)
+                    projectDevelopers: participantsState.projectDevelopers.concat({
+                        username: action.payload.username,
+                        userType: action.payload.userType,
+                        userId: action.payload.userId
+                    })
                 }
             }
 
@@ -228,7 +236,8 @@ function ParticipantInputReducer(participantsState: {
                 const newProjectDeveloperArray = participantsState.projectDevelopers.map((dev) => {
                     let returnDeveloper = dev;
                     if (dev.userId == action.payload.userId) {
-                        if (dev.userType.length == 1 && dev.userType[0] !== "") {
+                    
+                        if (dev.userType.length == action.payload.userType.length) {
 
                             returnDeveloper = {
                                 userId: dev.userId,
@@ -246,13 +255,14 @@ function ParticipantInputReducer(participantsState: {
 
                                         noMatch = (userType !== action.payload.userType[i]);
                                     }
-                                    return noMatch
+                                    return noMatch;
                                 }),
                                 username: dev.username
                             }
                         }
                         return returnDeveloper;
                     }
+                    return returnDeveloper;
                 });
 
                 returnState = ({
