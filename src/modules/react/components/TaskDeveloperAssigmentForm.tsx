@@ -85,6 +85,9 @@ export function TaskDeveloperAssignmentForm({ featureIndex, developmentTask, dev
             return false;
         })
     }
+
+    
+
     return ((devOptions != null) ? (<DeverloperAssignmentForm devLegendText="Assign task to feature-developers :" developerAssignmentState={{ developerOptions: devOptions, indicesSelected: { setState: setSelectedIndicesState, stateVariable: selectedIndicesState.indicesSelected } }}>
         <Button onClick={
             (e) => {

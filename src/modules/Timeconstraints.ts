@@ -24,21 +24,22 @@
     }
    
     /**The completion date of a feature or project, null if incomplete */
-    private _completiondate: Date|null = null;
+    public completionDate: Date|null = null;
     public get completiondate(): string|null{
-           if (this._completiondate) {
-                let completionYear = this._completiondate.getFullYear();
-    let completionMonth = this._completiondate.getMonth();
-    let completionDay = this._completiondate.getDate();
-    let completionHours = this._completiondate.getHours();
-    let completionMinutes = this._completiondate.getMinutes();
-        return `${completionYear} - ${completionMonth} - ${completionDay} - ${completionHours} - ${completionMinutes} `;
+           if (this.completionDate) {
+    //             let completionYear = this.completionDate.getFullYear();
+    // let completionMonth = this.completionDate.getMonth();
+    // let completionDay = this.completionDate.getDate();
+    // let completionHours = this.completionDate.getHours();
+    // let completionMinutes = this.completionDate.getMinutes();
+    this.dateToString(this.completionDate);
+        return this.dateToString(this.completionDate);;
     } else {
         return null
     }
     }
     public set completiondate(value:Date) {
-    this._completiondate = value;    }
+    this.completionDate = value;    }
 
 
 
@@ -81,7 +82,7 @@ let currentMinutes = new Date().getMinutes();
 let currentSeconds = new Date().getSeconds();
 let currentMilliseconds = new Date().getMilliseconds();
 let utcTimestamp = Date.UTC(currentYear, currentMonth, currentDay, currentHours, currentMinutes, currentSeconds, currentMilliseconds);
-    this._completiondate = new Date(utcTimestamp);
+    this.completionDate = new Date(utcTimestamp);
    
 }
 /**
