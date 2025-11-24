@@ -195,10 +195,12 @@ function ProjectView({ project }: ProjectViewProps) {
             <textarea defaultValue={`${project.description}`} disabled={false}>
 
             </textarea>
+            <hr></hr>
 
 
 
             <ProjectSchedule projectDevs={project.developerTeam} features={state}></ProjectSchedule>
+            <hr></hr>
 
 
 
@@ -207,6 +209,7 @@ function ProjectView({ project }: ProjectViewProps) {
             <AddFeaturesElement onSubmitFeature={handleSubmitFeature} projectDevTeam={project.developerTeam} projectTimeConstraints={project.timeconstraints}>
 
             </AddFeaturesElement>
+            <hr></hr>
 
 
 
@@ -230,6 +233,7 @@ function ProjectView({ project }: ProjectViewProps) {
 
 
             }} features={state}></AddTaskElement>
+            <hr></hr>
 
 
 

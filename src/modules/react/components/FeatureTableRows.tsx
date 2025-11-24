@@ -3,6 +3,9 @@ import { Feature } from "../../feature";
 import { themeContext } from "../context/ThemeContext";
 import { Button } from "./Button";
 import { getKeysForList } from "./ProjectsTab";
+import { TimeConstraints } from "../../Timeconstraints";
+import { TaskDeveloperAssignmentForm } from "./TaskDeveloperAssigmentForm";
+import { DeverloperAssignmentForm } from "./AddTaskElement";
 
 export function getActiveDevelopmentTasks(feature : Feature){
      if(feature.developmentTasks !== null && typeof feature.developmentTasks !== "undefined"){
@@ -63,13 +66,38 @@ export function FeatureTableRows({ feature, featureIndex, handleStatusChange }: 
     if (activeTasks!.length > 0) {
 
         activeTasks!.map((task, index) => {
+            let devAssignmentForm : ReactNode = (<></>);
+            let assignedTaskDevelopers : ReactNode = (<></>);
+            if(task.assignedDevelopers !== null){
+                                    
+                const devTaskIndex = feature.developmentTasks?.findIndex((taskIn) => ((taskIn.type === taskIn.type) && (taskIn.description === task.description)));
 
-            activeTds[index] = (<td key={activeTaskKeys[index]}><div style={{ border: `medium inset ${appThemeContext.primaryBackgroundColor} ` }}><h5>{` ${task.timeconstraints.startdate} -> ${task.timeconstraints.enddate}`}</h5>
+              const keys : React.Key[] =  getKeysForList(task.assignedDevelopers);
+              let asssignedDevsListElements : ReactNode = task.assignedDevelopers.map((dev, index)=>{
+
+                const userTypeString = (dev.developerType[0]!== undefined && dev.developerType[0]!=="") ? `(${dev.developerType})` : "";
+              return ( <li key={keys[index]} value={dev.username}>{dev.username}{userTypeString}</li>);
+
+              });
+                assignedTaskDevelopers = (
+               <> <h6>Developers assigned to {task.description}</h6>
+              <ul>{asssignedDevsListElements}</ul></>);
+
+              if(!(feature.assignedDevelopers?.filter((dev)=> task.assignedDevelopers?.includes(dev)).length == feature.assignedDevelopers?.length)){
+               devAssignmentForm = (<TaskDeveloperAssignmentForm devTaskIndex={devTaskIndex!} developmentTask={task} dispatchAction={handleStatusChange} featureDevelopers={feature.assignedDevelopers} featureIndex={featureIndex} ></TaskDeveloperAssignmentForm>)
+              }
+
+            }
+
+            activeTds[index] = (<td key={activeTaskKeys[index]}><div style={{ border: `medium inset ${appThemeContext.primaryBackgroundColor} ` }}><h5>{`${task.timeconstraints.startdateString} -> ${task.timeconstraints.enddateString}`}</h5>
                 <h5>{`${task.type}`}</h5>
 
                 <textarea disabled={false} defaultValue={task.description}>
 
                 </textarea>
+                                {assignedTaskDevelopers}
+                                {devAssignmentForm}
+
                 <Button isDisabled={false} onClick={(e) => {
                     e.preventDefault(); e.stopPropagation();
                     //make action object
@@ -115,15 +143,41 @@ export function FeatureTableRows({ feature, featureIndex, handleStatusChange }: 
     }
     let pendingdTds = new Array(pendingTasks!.length);
     if (pendingTasks!.length > 0) {
+        
 
         pendingTasks!.map((task, index) => {
+            let assignedTaskDevelopers : ReactNode = (<></>);
+                        let devAssignmentForm : ReactNode = (<></>);
 
-            pendingdTds[index] = <td key={pendingTaskKeys[index]}><div style={{ border: `medium inset ${appThemeContext.primaryBackgroundColor} ` }}><h5>{`${task.timeconstraints.startdate} -> ${task.timeconstraints.enddate}`}</h5>
+            if(task.assignedDevelopers !== null){
+                                const devTaskIndex = feature.developmentTasks?.findIndex((taskIn) => ((taskIn.type === taskIn.type) && (taskIn.description === task.description)));
+
+              const keys : React.Key[] =  getKeysForList(task.assignedDevelopers);
+              let asssignedDevsListElements : ReactNode = task.assignedDevelopers.map((dev, index)=>{
+
+                const userTypeString = (dev.developerType[0]!== undefined && dev.developerType[0]!=="") ? `(${dev.developerType})` : "";
+              return ( <li key={keys[index]} value={dev.username}>{dev.username}{userTypeString}</li>);
+
+              });
+                assignedTaskDevelopers = (
+               <> <h6>Developers assigned to {task.description}</h6>
+              <ul>{asssignedDevsListElements}</ul></>);
+               if(!(feature.assignedDevelopers?.filter((dev)=> task.assignedDevelopers?.includes(dev)).length == feature.assignedDevelopers?.length)){
+               devAssignmentForm = (<TaskDeveloperAssignmentForm devTaskIndex={devTaskIndex!} developmentTask={task} dispatchAction={handleStatusChange} featureDevelopers={feature.assignedDevelopers} featureIndex={featureIndex} ></TaskDeveloperAssignmentForm>)
+              }
+
+            }
+            
+
+            pendingdTds[index] = <td key={pendingTaskKeys[index]}><div style={{ border: `medium inset ${appThemeContext.primaryBackgroundColor} ` }}><h5>{`${task.timeconstraints.startdateString} -> ${task.timeconstraints.enddateString}`}</h5>
                 <h5>{`${task.type}`}</h5>
 
                 <textarea disabled={false} defaultValue={task.description}>
 
                 </textarea>
+                {assignedTaskDevelopers}
+                {devAssignmentForm}
+                
                 <Button isDisabled={false} onClick={(e) => {
                     e.preventDefault(); e.stopPropagation();
                     //make action object
@@ -152,8 +206,29 @@ export function FeatureTableRows({ feature, featureIndex, handleStatusChange }: 
     if (completedTasks.length > 0) {
 
         completedTasks.map((task, index) => {
+              let assignedTaskDevelopers : ReactNode = (<></>);
+                                      let devAssignmentForm : ReactNode = (<></>);
 
-            completedTds[index] = <td key={completedTaskKeys[index]}><div ref={refsForCompletedTasks[index]} style={{ border: `medium inset ${appThemeContext.primaryBackgroundColor} ` }}><h5>{`${task.timeconstraints.startdate} -> ${task.timeconstraints.enddate} \n \t Completed at : ${task.timeconstraints.completiondate}`}</h5>
+            if(task.assignedDevelopers !== null){
+                                                const devTaskIndex = feature.developmentTasks?.findIndex((taskIn) => ((taskIn.type === taskIn.type) && (taskIn.description === task.description)));
+
+              const keys : React.Key[] =  getKeysForList(task.assignedDevelopers);
+              let asssignedDevsListElements : ReactNode = task.assignedDevelopers.map((dev, index)=>{
+
+                const userTypeString = (dev.developerType[0]!== undefined && dev.developerType[0]!=="") ? `(${dev.developerType})` : "";
+              return ( <li key={keys[index]} value={dev.username}>{dev.username}{userTypeString}</li>);
+
+              });
+              assignedTaskDevelopers = (
+               <> <h6>Developers assigned to {task.description}</h6>
+              <ul>{asssignedDevsListElements}</ul></>);
+                if(!(feature.assignedDevelopers?.filter((dev)=> task.assignedDevelopers?.includes(dev)).length == feature.assignedDevelopers?.length)){
+               devAssignmentForm = (<TaskDeveloperAssignmentForm devTaskIndex={devTaskIndex!} developmentTask={task} dispatchAction={handleStatusChange} featureDevelopers={feature.assignedDevelopers} featureIndex={featureIndex} ></TaskDeveloperAssignmentForm>);
+            }
+
+            }
+
+            completedTds[index] = <td key={completedTaskKeys[index]}><div ref={refsForCompletedTasks[index]} style={{ border: `medium inset ${appThemeContext.primaryBackgroundColor} ` }}><h5>{`${task.timeconstraints.startdateString} -> ${task.timeconstraints.enddateString} \n \t Completed at : ${task.timeconstraints.completiondate}`}</h5>
                 <h5>{`${task.type}`}</h5>
                 <Button cssClassName="remove-task-from-schedule-button " isDisabled={false} onClick={(e) => {
                     e.preventDefault(); e.stopPropagation();
@@ -172,6 +247,9 @@ export function FeatureTableRows({ feature, featureIndex, handleStatusChange }: 
                 <textarea defaultValue={task.description} disabled={false}>
 
                 </textarea>
+                                {assignedTaskDevelopers}
+                                {devAssignmentForm}
+
             </div></td>;
 
 

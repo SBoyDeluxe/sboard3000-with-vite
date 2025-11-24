@@ -74,15 +74,9 @@ dateToString(dateToConvert: Date): string {
  * 
  */
 public  completeConstraint() {
-    let currentYear = new Date().getFullYear();
-let currentMonth = new Date().getMonth();
-let currentDay = new Date().getDate();
-let currentHours = new Date().getHours();
-let currentMinutes = new Date().getMinutes();
-let currentSeconds = new Date().getSeconds();
-let currentMilliseconds = new Date().getMilliseconds();
-let utcTimestamp = Date.UTC(currentYear, currentMonth, currentDay, currentHours, currentMinutes, currentSeconds, currentMilliseconds);
-    this.completionDate = new Date(utcTimestamp);
+    let now = new Date(Date.now());
+
+    this.completionDate = now;
    
 }
 /**
