@@ -5,7 +5,7 @@ import type { FieldSetOptions } from "./Form";
 import { themeContext } from "../context/ThemeContext";
 import { Button } from "./Button";
 import * as React from "react";
-import { type ClientInputData, type ParticipantInputData, useParticipantReducer } from "./reducers/ParticipantInputReducer";
+import { type ClientInputData, getInitState, type ParticipantInputData, ParticipantInputReducer } from "./reducers/ParticipantInputReducer";
 
 import { firebaseClient, UserStore } from "../store/UserStore";
 import { LoadingStore } from "./LoadingStore";
@@ -69,8 +69,14 @@ export function CreateProjectTab(): ReactNode {
     const dateFieldSetOptions: FieldSetOptions = { children: fieldSetDateLegendText, textColor: appThemeContext.secondaryContentColor };
     const userStore = React.useSyncExternalStore(UserStore.subscribe, UserStore.getSnapshotUser);
 
+    
 
-    const [participantState, participantDispatch] = useParticipantReducer();
+    const [participantState, participantDispatch] = React.useReducer(ParticipantInputReducer,{
+        projectManagers :[{ username: "", userType: [""], userId: -1 }],
+projectDevelopers :[{ username: "", userType: [""], userId: -1 }],
+               projectClients: [{ username: "", userId: -1 }]
+
+    });
 
     const [createProjectState, setCreateProjectState] = React.useState(() => {
 
