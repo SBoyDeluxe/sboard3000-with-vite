@@ -78,7 +78,7 @@ export function ProjectSchedule({ features, projectDevs }: { features: Feature[]
 
                     activeTasks!.map((task, index) => {
 
-                        activeTds[index] = (<td key={activeTaskKeys[index]}><div style={{ border: `medium inset ${appThemeContext.primaryBackgroundColor} ` }}><h5>{`${task.timeconstraints.startdate} -> ${task.timeconstraints.enddate}`}</h5>
+                        activeTds[index] = (<td key={activeTaskKeys[index]}><div style={{ border: `medium inset ${appThemeContext.primaryBackgroundColor} ` }}><h5>{`${task.timeconstraints.startdateString} -> ${task.timeconstraints.enddateString}`}</h5>
                             <h5>{`${task.type}`}</h5>
 
                             <textarea disabled={false} defaultValue={task.description}>
@@ -95,7 +95,7 @@ export function ProjectSchedule({ features, projectDevs }: { features: Feature[]
 
                     pendingTasks.map((task, index) => {
 
-                        pendingdTds[index] = (<td key={pendingTaskKeys[index]}><div style={{ border: `medium inset ${appThemeContext.primaryBackgroundColor} ` }}><h5>{`${task.timeconstraints._startdate} -> ${task.timeconstraints._enddate}`}</h5>
+                        pendingdTds[index] = (<td key={pendingTaskKeys[index]}><div style={{ border: `medium inset ${appThemeContext.primaryBackgroundColor} ` }}><h5>{`${task.timeconstraints.startdateString} -> ${task.timeconstraints.enddateString}`}</h5>
                             <h5>{`${task.type}`}</h5>
 
                             <textarea disabled={false} defaultValue={task.description}>
@@ -113,7 +113,7 @@ export function ProjectSchedule({ features, projectDevs }: { features: Feature[]
 
                     completedTasks.map((task, index) => {
 
-                        completedTds[index] = (<td key={completedTaskKeys[index]}><div style={{ border: `medium inset ${appThemeContext.primaryBackgroundColor} ` }}><h5>{`${task.timeconstraints._startdate} -> ${task.timeconstraints._enddate}`}</h5>
+                        completedTds[index] = (<td key={completedTaskKeys[index]}><div style={{ border: `medium inset ${appThemeContext.primaryBackgroundColor} ` }}><h5>{`${task.timeconstraints.startdateString} -> ${task.timeconstraints.enddateString} Completed - ${task.timeconstraints.completiondate}`}</h5>
                             <h5>{`${task.type}`}</h5>
 
                             <textarea disabled={false} defaultValue={task.description}>

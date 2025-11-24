@@ -32,7 +32,7 @@ export function AddTaskElement({ handleAddTask, features }: AddTaskElementProps)
 
         let featureKeys = getKeysForList(features);
 
-        let featureOptions = features.map((feature, index) => {
+        let featureOptions : ReactNode = features.map((feature, index) => {
 
             return <option value={index} key={featureKeys[index]}> {`${feature.title}`}</option>;
         });
@@ -57,7 +57,7 @@ export function AddTaskElement({ handleAddTask, features }: AddTaskElementProps)
 
                 return ({
                     ...prevState,
-                    selectedFeatureIndex: parseInt(e.target.value)
+                    selectedFeatureIndex: e.target.value
                 });
             });
 
@@ -147,14 +147,19 @@ export function AddTaskElement({ handleAddTask, features }: AddTaskElementProps)
         return (<>
             <Details cssClassName="" summaryContent={"Add task :"}>
 
+                <select value={addTaskState.selectedFeatureIndex} onChange={handleSelectFeature}>
+                    {featureOptions}
+                </select>
+
 
                 <Form cssClassName="add-task-form">
 
 
 
-                    <Input inputType="text" cssClassName="task-description-input" labelName="Description :" name="taskDescriptionInput" onEvent={handleChange} onInput={handleInput} inputState={addTaskState.taskDescriptionInput}>
+
+                    <Input inputType="text" cssClassName="task-description-input" labelName="Description :" name="taskDescriptionInput" onEvent={handleChange}  inputState={addTaskState.taskDescriptionInput}>
                     </Input>
-                    <Input inputType="text" cssClassName="task-type-input" labelName="Task-type :" name="taskTypeInput" onEvent={handleChange} onInput={handleInput} inputState={addTaskState.taskTypeInput}>
+                    <Input inputType="text" cssClassName="task-type-input" labelName="Task-type :" name="taskTypeInput" onEvent={handleChange}  inputState={addTaskState.taskTypeInput}>
                     </Input>
 
 

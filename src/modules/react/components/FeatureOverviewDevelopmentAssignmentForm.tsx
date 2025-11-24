@@ -61,7 +61,7 @@ export function FeatureOveriewDeveloperAssigmentForm({ projectDevs, dispatchActi
     }
 
 
-    return ((devOptions[0] != null) ? (<DeverloperAssignmentForm devLegendText={`Assign project developers to ${feature.title} :`} developerAssignmentState={devAssignmentData} >
+    return ((devOptions.length >0 ) ? (<DeverloperAssignmentForm devLegendText={`Assign project developers to ${feature.title} :`} developerAssignmentState={devAssignmentData} >
         <Button onClick={
             (e) => {
                 e.preventDefault();
