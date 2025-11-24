@@ -94,14 +94,14 @@ export function FeatureOverview({ dispatchAction, features, projectDevs }: Featu
                                 <strong>Assigned task developers : </strong>
                                 <ul> {
                                     task.assignedDevelopers.map((dev, index) => {
-                                        return (<li key={keysForList![index]}>{dev.username}</li>)
+                                        return (<li key={keysForList[index]}>{dev.username}</li>)
                                     })}
                                 </ul>
 
                             </Background>) : (<></>)}
-                            <TaskDeveloperAssignmentForm devTaskIndex={devTaskIndex} developmentTask={task} dispatchAction={dispatchAction}
+                         {(feature.assignedDevelopers?.filter((assignedDev)=>task.assignedDevelopers?.includes(assignedDev)).length == feature.assignedDevelopers?.length) &&   <TaskDeveloperAssignmentForm devTaskIndex={devTaskIndex} developmentTask={task} dispatchAction={dispatchAction}
                                 featureDevelopers={feature.assignedDevelopers!} featureIndex={index}>
-                            </TaskDeveloperAssignmentForm>
+                            </TaskDeveloperAssignmentForm>}
                         </Details>
 
                     </Fragment>
