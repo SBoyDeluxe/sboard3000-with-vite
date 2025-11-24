@@ -6,25 +6,23 @@
  * 
  * 
  */
-export  class TimeConstraints{
+ export class TimeConstraints{
 
 
     /**The start date of work on a feature or project */
-    private _startdate: Date;
-    public get startdate(): string {
-        return this.dateToString(this._startdate);
+   public startdate: Date;
+   
+    public get startdateString() : string{
+        return this.getDateString("start-date");
     }
-    public set startdate(value: Date) {
-        this._startdate = value;
-    }
+    
     /**The expected end date of work on a feature or project */
-    private _enddate: Date;
-    public get enddate(): string {
-        return this.dateToString(this._enddate);
+    public enddate: Date;
+     
+    public get enddateString() : string{
+        return this.getDateString("end-date");
     }
-    public set enddate(value: Date) {
-        this._enddate = value;
-    }
+   
     /**The completion date of a feature or project, null if incomplete */
     private _completiondate: Date|null = null;
     public get completiondate(): string|null{
@@ -45,26 +43,31 @@ export  class TimeConstraints{
 
 
      constructor(startdate: Date, enddate: Date){
-    this._startdate = startdate;
-    this._enddate = enddate;
+    this.startdate = startdate;
+    this.enddate = enddate;
    
 
 
-}
+    }
+    
   
 
 
 /** Takes in a date and converts to a readable string
  * 
  * @param {Date} dateToConvert 
- * @returns {string} dateString : Format (year - month - day)
+ * @returns {string} dateString : Format (year - month - day | hh:mm |)
  */
-private  dateToString(dateToConvert: Date): string {
+dateToString(dateToConvert: Date): string {
 
     const year = dateToConvert.getFullYear();
     const month = dateToConvert.getMonth();
     const day = dateToConvert.getDate();
-    return `${year} - ${month} - ${day} `;
+    const hour = dateToConvert.getHours();
+    const minutes = dateToConvert.getMinutes();
+    const hourString = (hour < 10) ? `0${hour}` : `${hour}`;
+    const minuteString = (minutes < 10) ? `0${minutes}` : `${minutes}`;
+    return `${year} - ${month} - ${day} | ${hourString} : ${minuteString} | `;
 }
 /**Sets the completion date to now
  * 
@@ -131,14 +134,35 @@ return {
  *      
  * 
  */
-public  getTimePassedFraction(){
+public getTimePassedFraction(){
 
-  const totalTime =  this._enddate.getTime() - this._startdate.getTime();
+  const totalTime =  this.enddate.getTime() - this.startdate.getTime();
 
-  const timePassed = new Date(Date.now()).getTime() - this._startdate.getTime();
+  const timePassed = new Date(Date.now()).getTime() - this.startdate.getTime();
 
   return timePassed/totalTime;
 }
+
+     getDateString(wantedString :"start-date"|"end-date") : string{
+
+        let returnString = "";
+        switch(wantedString){
+            case "start-date":{
+               returnString = this.dateToString(this.startdate);
+            }
+            break;
+            case "end-date":{
+                
+                returnString = this.dateToString(this.enddate);
+
+            }
+            break;
+          
+        }
+
+      return returnString;
+
+    }
 
    public static  getAsFormattedString(date: Date): string {
 
@@ -147,11 +171,14 @@ public  getTimePassedFraction(){
         let dateDay = date.getDate();
         let dateHours = date.getHours();
         let dateMinutes = date.getMinutes();
-        return `${dateYear}/${(dateMonth >= 10) ? dateMonth : `0${dateMonth}`} /${(dateDay >= 10) ? dateDay : `0${dateDay}`}  ${(dateHours >= 10) ? dateHours : `0${dateHours}`}:${(dateMinutes >= 10) ? dateMinutes : `0${dateMinutes}`} `;
+        return `${dateYear}/${(dateMonth >= 10) ? dateMonth : `0${dateMonth}`} /${(dateDay >= 10) ? dateDay : `0${dateDay}`} at ${(dateHours >= 10) ? dateHours : `0${dateHours}`}:${(dateMinutes >= 10) ? dateMinutes : `0${dateMinutes}`} `;
 
     }
 
+    
+
 }
+
 
 
 

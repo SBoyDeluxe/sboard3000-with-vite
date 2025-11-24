@@ -121,7 +121,10 @@ projectDevelopers :[{ username: "", userType: [""], userId: -1 }],
         console.log(createProjectState);
         console.log(participantState);
 
-        createProject({ projectTitle: createProjectState.projectTitle, projectDescription: createProjectState.projectDescription }, { ...participantState }, { projectStartTime: createProjectState.projectStartTime, projectEndTime: createProjectState.projectEndTime });
+        createProject({ projectTitle: createProjectState.projectTitle, projectDescription: createProjectState.projectDescription }, {projectClients : participantState.projectClients,
+                                                                                                                                    projectDevelopers: participantState.projectDevelopers,
+                                                                                                                                    projectManagers : participantState.projectManagers
+        } , { projectStartTime: createProjectState.projectStartTime, projectEndTime: createProjectState.projectEndTime });
     }
 
 
@@ -189,19 +192,18 @@ projectDevelopers :[{ username: "", userType: [""], userId: -1 }],
             && ((projectManagers.filter((manager) => (manager.username === currentUserAsInput.username && manager.userId === currentUserAsInput.userId))[0] !== undefined) ||
                 (projectDevelopers.filter(dev => (dev.username === currentUserAsInput.username && dev.userId === currentUserAsInput.userId))[0] !== undefined) && (projectDevelopers.length >= 1)) && (projectDevelopers[0].userId !== -1);
         if (allVariablesExist) {
-            const startDate = new Date(projectStartTime);
-            const endDate = new Date(projectEndTime);
+            const startDate = new Date(Date.parse(projectStartTime));
+            const endDate = new Date(Date.parse(projectEndTime));
             const todaysDate = new Date(Date.now());
 
 
-            const datesAreValid = ((endDate.getTime() >= startDate.getTime()) && (endDate.getTime() >= todaysDate.getTime()));
+            const datesAreValid = ((endDate.valueOf() >= startDate.valueOf()) && (endDate.valueOf() >= todaysDate.valueOf()));
 
             if (datesAreValid) {
                 //All variables are valid -> We can now start construction of the project parameters
                 const timeConstraints = new TimeConstraints(startDate, endDate);
 
                 const managers = projectManagers.map((manager) => {
-                const timeConstraints = new TimeConstraints(startDate, endDate);
 
                     return new Manager(manager.userId, manager.username, manager.userType);
                 });
