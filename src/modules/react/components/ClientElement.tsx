@@ -67,7 +67,7 @@ export function ClientElement({ onRemoveClient, onSubmitClient, clientInputList 
         <>
                     <h3>Clients</h3>
 
-            {!participantListEmpty && userList}
+            {userList}
             <Input inputState={userInput.usernameInput} onEvent={handleUsernameInputChange} inputType="text" name="usernameInput" labelName="Enter username :" cssClassName="client-username-input">
             </Input>
             <Button isDisabled={false} onClick={submitInputData}  cssClassName="add-user-button">
@@ -87,10 +87,14 @@ export function ClientElement({ onRemoveClient, onSubmitClient, clientInputList 
         event.stopPropagation();
         const userId: number = getSelectedUser()[0].userId;
         onRemoveClient(selectedUsername,userId);
+        setSelectedUsername(clientInputList[0].username);
+       
+  
 
     }
     function getSelectedUser() {
-        return clientInputList.filter((client) => { client.username === selectedUsername; });
+        const filteredList = clientInputList.filter((client) =>  client.username == selectedUsername);
+        return filteredList;
     }
 
     function submitInputData(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {

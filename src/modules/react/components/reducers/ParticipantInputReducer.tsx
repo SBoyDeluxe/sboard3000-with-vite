@@ -18,10 +18,10 @@ export function useParticipantReducer() {
     return useReducer(ParticipantInputReducer, initState);
 }
 
- export function getInitState() {
-    let projectManagers: ParticipantInputData[] =   [{ username: "", userType: [""], userId: -1 }];
+export function getInitState() {
+    let projectManagers: ParticipantInputData[] = [{ username: "", userType: [""], userId: -1 }];
     let projectDevelopers: ParticipantInputData[] = [{ username: "", userType: [""], userId: -1 }];
-    let projectClients: ClientInputData[] =                         [{ username: "", userId: -1 }];
+    let projectClients: ClientInputData[] = [{ username: "", userId: -1 }];
     //The creating user is implicitly manager of the project 
     // const loggedInUser = UserStore.getSnapshotUser();
     // projectManagers[0] = { username: loggedInUser?.username.username!, userType: ["Creator"], userId: loggedInUser?.authParameters.userId! };
@@ -236,7 +236,7 @@ export function ParticipantInputReducer(participantsState: {
                 const newProjectDeveloperArray = participantsState.projectDevelopers.map((dev) => {
                     let returnDeveloper = dev;
                     if (dev.userId == action.payload.userId) {
-                    
+
                         if (dev.userType.length == action.payload.userType.length) {
 
                             returnDeveloper = {
@@ -302,12 +302,18 @@ export function ParticipantInputReducer(participantsState: {
             if (projectClientsIsUninitiated) {
                 returnState = {
                     ...participantsState,
-                    projectClients: [action.payload]
+                    projectClients: [{
+                        username: action.payload.username,
+                        userId: action.payload.userId
+                    }]
                 }
             } else {
                 returnState = {
                     ...participantsState,
-                    projectClients: participantsState.projectClients.concat(action.payload)
+                    projectClients: participantsState.projectClients.concat({
+                        username: action.payload.username,
+                        userId: action.payload.userId
+                    })
                 }
             }
 
@@ -365,7 +371,7 @@ export function ParticipantInputReducer(participantsState: {
             break;
         case "REMOVE_CLIENT_INPUT_DATA": {
 
-            if (participantsState.projectClients.length === 1) {
+            if (participantsState.projectClients.length == 1) {
                 let projectClients: ClientInputData[] = getInitState().projectClients;
                 returnState = ({
                     ...participantsState,
