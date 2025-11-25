@@ -6,7 +6,7 @@ export default defineConfig({
   plugins: [react()],
   base:"/sboard3000-with-vite/",
   build:{
-    outDir:"docs"
+    outDir:"dist"
   }
   
 })
