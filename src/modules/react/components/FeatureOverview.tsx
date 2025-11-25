@@ -73,7 +73,10 @@ export function FeatureOverview({ dispatchAction, features, projectDevs }: Featu
             //     let featureDevsUserIds = feature.assignedDevelopers?.map((dev: Developer) => { return dev.userId })!;
             //     let devsNotInFeature: Developer[] = getDevsNotInFeature(projectDevs!, feature);
 
-            // } else {
+            // } else { {(feature.developmentTasks) ? (
+                            // <Details summaryContent={"Assign tasks to developers"} cssClassName="" >
+                            //     {devTaskDevForms}
+                            // </Details>) : (<></>)}
             //     let devData: DeveloperAssignmentData = { developerOptions: projectDevs, indicesSelected: [0] };
 
             // }
@@ -176,10 +179,7 @@ export function FeatureOverview({ dispatchAction, features, projectDevs }: Featu
                         </Details>) : (<></>)}
 
 
-                        {(feature.developmentTasks) ? (
-                            <Details summaryContent={"Assign tasks to developers"} cssClassName="" >
-                                {devTaskDevForms}
-                            </Details>) : (<></>)}
+                       
                     </Background>
                 </Details>
 

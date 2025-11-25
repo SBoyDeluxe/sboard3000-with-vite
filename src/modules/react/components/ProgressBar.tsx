@@ -23,6 +23,7 @@ type ProgressBarProps = {
  */
 export function ProgressBar({barColor, progress = 0} : ProgressBarProps ){
     const appThemeContext = useContext(themeContext);
+    progress = (progress > 100) ? 100 : progress;
 
     barColor = (barColor !==undefined) ? barColor : appThemeContext.focusedContentColor;
     return (
