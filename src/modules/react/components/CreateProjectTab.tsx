@@ -1,4 +1,4 @@
-import { type Key, type ReactNode, useContext } from "react";
+import { type Key, type ReactNode, useContext, useState } from "react";
 import { Form } from "./Form";
 import { Input } from "./Input";
 import type { FieldSetOptions } from "./Form";
@@ -14,6 +14,8 @@ import { Manager, Developer, Client } from "../../User";
 import { ClientElement } from "./ClientElement";
 import { ParticipantElement } from "./ParticipantElement";
 import { TimeConstraints } from "../../Timeconstraints";
+import { Header } from "./Header";
+import { InfoToggleButton } from "./InfoToggleButton";
 export type CreateProjectTabProps = {
 
     createProjectState: {
@@ -128,12 +130,146 @@ projectDevelopers :[{ username: "", userType: [""], userId: -1 }],
     }
 
 
+    const [infoToggleState, setInfoToggleState] = useState(false);
 
+  function onInfoToggleClick(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
+        event.preventDefault();
+        event.stopPropagation();
 
+        setInfoToggleState((prev) => !prev);
+    }
 
 
     return (
         <>
+         <Header cssClassName="project-tab-content-header" title="Create Project" titleClassName="tab-title">
+                                    <InfoToggleButton toggleState={{
+                                        stateVariable: infoToggleState,
+                                        setState: setInfoToggleState
+                                    }}  ></InfoToggleButton>
+                                </Header>
+                                 {infoToggleState && (<>
+                            <table>
+                                <caption>
+                                                                        <h3>Project</h3>
+
+                                    Here you can view the current projects you are involved in.
+                                    A project consists of Features, the features of a project encapsulates the functions of the project and can be, for example:
+                                    <br></br>
+                                    <ul>
+                                        <li> UI - The user interface of an application.</li>
+                                        <li> Database - Data persistence layer for a software project</li>
+                                        <li> Administration - For example assigning budget or assigning developers to develop features.</li>
+                                        <li>Marketing - The marketing aspect of a project.</li>
+                                    </ul>
+
+
+
+
+
+                                    Developers are responsible for developing and completing a given feature. To specify the development needs of a given feature a developer can add tasks
+                                    to the feature´s task schedule : The task is assigned to one or more in the development team for that specific feature who then can indicate progress on that
+                                    specific task by settings its status as 'Pending'/'Active'/'Completed' and updating the project entry by pressing 'Update project'. The task can then be removed
+                                    to decrease clutter, this removes the entry from the schedule/project overview.
+                                </caption>
+                                <tr>
+                                    <th></th>
+                                    <th> Project: </th>
+                                    <th>  Feature:  </th>
+                                    <th> Task: </th>
+                                </tr>
+                                <tr>
+                                    <th>Structure:</th>
+                                    <td>  <ol>
+                                        <li>Title (Title of the project)</li>
+                                        <li>Description (Description of the project)</li>
+                                        <li>Timeconstraints (Start-date and end date of the project)</li>
+                                        <li>Features (As specified above)</li>
+                                        <li>Development team (All developers involved in project)</li>
+                                    </ol></td>
+                                    <td><ol>
+                                        <li>Title (Title of the feature)</li>
+                                        <li>Type (The feature type - 'Front-end','Administration' or any arbitrary feature type)</li>
+                                        <li>Description (Description of the feature)</li>
+                                        <li>Timeconstraints (Start-date and end date of the feature)</li>
+                                        <li>Development team (All project developers assigned to a specific feature)</li>
+                                    </ol> </td>
+                                    <td>  <ol>
+                                        <li>Description (Description of the feature)</li>
+                                        <li>Type (The task type - 'Login-screen  (For UI-feature)','Entity-implementation(For back-end feature)' or any arbitrary feature type)</li>
+                                        <li>Timeconstraints (Start-date and end date of the task)</li>
+                                        <li>Development team (All feature developers assigned to the specific task)</li>
+                                    </ol>
+                                    </td>
+                                </tr>
+                            </table>
+                            <code>
+                                Example :
+                                        Make web store application
+                                        <br></br>
+
+                                        Title : GamerStore 
+                                                                                <br></br>
+
+                                        Description: A web site where users can order games from gamer store
+                                                                                <br></br>
+
+
+                                        Start-date: 3030-08-10 10:50
+                                                                                <br></br>
+
+                                        End-date: 3030-10-10 17:59
+                                                                                <br></br>
+
+
+                                        Development-team : Cole (Manager, Administrator, Treasurer)
+                                                                                <br></br>
+
+                                                           Livia (Developer, Front-end, React)
+                                                                                                   <br></br>
+
+                                                           Garminia (Developer, Back-end, cryptographer, RDB-dev)
+                                                                                                   <br></br>
+
+                                                           Guillermo (Client)
+                                                                                                   <br></br>
+                                        <br></br>
+
+
+
+                                        Features :                                         <br></br>
+
+                                                    Ui :                                                 <br></br>
+
+                                                         Description: Make the UI of the store                                        <br></br>
+
+
+                                                        Start-date: 3030-08-10 10:50                                        <br></br>
+
+                                                        End-date: 3030-10-10 17:59                                            <br></br>
+    
+                                                        Assigned developers : Livia                                           <br></br>
+
+
+                                                            Tasks(Ui):                                        <br></br>
+
+                                                                    Description: Make login screen                                        <br></br>
+
+                                                                    Task-type : React                                          <br></br>
+
+                                                                      Start-date: 3030-08-10 10:50                                        <br></br>
+
+                                                                      End-date: 3030-08-18 17:59                                           <br></br>
+
+                                                                      Assigned developer(s): Livia
+                                                                                                              <br></br>
+                                        <br></br>
+
+                                                        ...
+
+                            </code>
+                            
+                        </>)}
         <Form onSubmit={()=>{}}cssClassName="create-project-form" fieldSetOptions={fieldSetOptions} style={{
             backgroundColor: appThemeContext.primaryContentColor,
             border: `solid thin ${appThemeContext.secondaryContrastColor}`
