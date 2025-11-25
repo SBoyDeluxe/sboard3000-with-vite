@@ -1,4 +1,4 @@
-import { useContext, useEffect, useSyncExternalStore, type Key, useReducer, Fragment } from "react";
+import { useContext, useEffect, useSyncExternalStore, type Key, useReducer, Fragment, useState } from "react";
 import { Developer } from "../../User";
 import { MailboxStore, ProjectStore } from "../store/UserStore";
 import { Project } from "../../project";
@@ -16,14 +16,17 @@ import { ProjectSchedule } from "./ProjectSchedule";
 import { FeatureOverview } from "./FeatureOverview";
 import { Details } from "./Details";
 import { TimeConstraints } from "../../Timeconstraints";
+import { Header } from "./Header";
+import { Footer } from "./Footer";
+import { ToggleButton } from "./ToggleButton";
+import { InfoToggleButton } from "./InfoToggleButton";
+
 
 
 
 
 export type ProjectsTabProp = {
-    /**
-     * 
-     */
+
     projectList: string[],
 
 }
@@ -33,16 +36,24 @@ export function ProjectsTab() {
     const projectStore = useSyncExternalStore(ProjectStore.subscribe, ProjectStore.getSnapshotProjects);
     const mailBoxStore = useSyncExternalStore(MailboxStore.subscribe, MailboxStore.getSnapshotMailbox);
     let loadingStore = useLoadingStore();
+
+    const [infoToggleState, setInfoToggleState] = useState(false);
     //const appThemeContext = useContext(themeContext);
     useEffect(() => {
         ProjectStore.getProjects();
-    }, [ ,mailBoxStore]);
-   
+    }, [, mailBoxStore]);
+
     //  useEffect(() => ProjectStore.getProjects, []);
     let activeProjects: Project[] | null = projectStore;
 
-   // const [state, dispatcher] = useReducer(FeatureReducer, null);
+    // const [state, dispatcher] = useReducer(FeatureReducer, null);
 
+    function onInfoToggleClick(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
+        event.preventDefault();
+        event.stopPropagation();
+
+        setInfoToggleState((prev) => !prev);
+    }
 
 
 
@@ -73,12 +84,146 @@ export function ProjectsTab() {
             activeProjects !== null && (
 
                 <>
-                    {activeProjects.map((project, index) => {
+                        <Header cssClassName="project-tab-content-header" title="Projects" titleClassName="tab-title">
+                            <InfoToggleButton toggleState={{
+                                stateVariable: infoToggleState,
+                                setState: setInfoToggleState
+                            }}  ></InfoToggleButton>
+                        </Header>
 
 
-                        return (<Fragment key={keysNeededForProjectsList[index]}>
-                            <ProjectView project={project} ></ProjectView></Fragment>)
-                    })}
+
+
+
+
+
+
+
+
+                        {infoToggleState && (<>
+                            <table>
+                                <caption>
+                                                                        <h3>Project</h3>
+
+                                    Here you can view the current projects you are involved in.
+                                    A project consists of Features, the features of a project encapsulates the functions of the project and can be, for example:
+                                    <br></br>
+                                    <ul>
+                                        <li> UI - The user interface of an application.</li>
+                                        <li> Database - Data persistence layer for a software project</li>
+                                        <li> Administration - For example assigning budget or assigning developers to develop features.</li>
+                                        <li>Marketing - The marketing aspect of a project.</li>
+                                    </ul>
+
+
+
+
+
+                                    Developers are responsible for developing and completing a given feature. To specify the development needs of a given feature a developer can add tasks
+                                    to the feature´s task schedule : The task is assigned to one or more in the development team for that specific feature who then can indicate progress on that
+                                    specific task by settings its status as 'Pending'/'Active'/'Completed' and updating the project entry by pressing 'Update project'. The task can then be removed
+                                    to decrease clutter, this removes the entry from the schedule/project overview.
+                                </caption>
+                                <tr>
+                                    <th></th>
+                                    <th> Project: </th>
+                                    <th>  Feature:  </th>
+                                    <th> Task: </th>
+                                </tr>
+                                <tr>
+                                    <th>Structure:</th>
+                                    <td>  <ol>
+                                        <li>Title (Title of the project)</li>
+                                        <li>Description (Description of the project)</li>
+                                        <li>Timeconstraints (Start-date and end date of the project)</li>
+                                        <li>Features (As specified above)</li>
+                                        <li>Development team (All developers involved in project)</li>
+                                    </ol></td>
+                                    <td><ol>
+                                        <li>Title (Title of the feature)</li>
+                                        <li>Type (The feature type - 'Front-end','Administration' or any arbitrary feature type)</li>
+                                        <li>Description (Description of the feature)</li>
+                                        <li>Timeconstraints (Start-date and end date of the feature)</li>
+                                        <li>Development team (All project developers assigned to a specific feature)</li>
+                                    </ol> </td>
+                                    <td>  <ol>
+                                        <li>Description (Description of the feature)</li>
+                                        <li>Type (The task type - 'Login-screen  (For UI-feature)','Entity-implementation(For back-end feature)' or any arbitrary feature type)</li>
+                                        <li>Timeconstraints (Start-date and end date of the task)</li>
+                                        <li>Development team (All feature developers assigned to the specific task)</li>
+                                    </ol>
+                                    </td>
+                                </tr>
+                            </table>
+                            <br></br>
+                            <br></br>
+                            
+                            <table>
+                                <caption>
+                                    <h3>Legend</h3>
+                                    A legend to guide any new users
+                                </caption>
+                                <tr>
+                                    <th>Project schedule</th>
+                                    <th>Add-feature</th>
+                                    <th>Feature-overview</th>
+                                    <th>Add task</th>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <ol>
+                                            <li>The current project schedule, each row represents a feature and holds the tasks needed to complete that feature</li>
+                                            <li>Assigned project developers:
+                                                <ul>
+                                                    <li>
+                                                        The developers currently assigned to the project
+                                                    </li>
+                                                </ul>
+                                            </li>
+                                        </ol>
+                                    </td>
+
+                                    <td>Here you can add new features, specifying the data as shown in the previous table section.</td>
+                                    <td>Here you can see and manage all features. You can assign project devs to the feature, see the task-schedule of the specific feature and manage tasks.
+
+                                        <ol>
+                                            <li>
+                                                Task-schedule:
+                                                <ul>
+                                                    <li>
+                                                        See all tasks in a specific feature.
+                                                    </li>
+                                                    <li>
+                                                        Assign feature-developers to those tasks using the assignment-forms on the schedule
+                                                    </li>
+                                                    <li>
+                                                        Set task-status of tasks in that feature
+                                                    </li>
+                                                </ul>
+                                            </li>
+                                            <li>
+                                                Development team
+                                                <ul>
+                                                    <li>
+                                                        See the developers assigned to the feature
+                                                    </li>
+                                                </ul>
+                                            </li>
+                                        </ol>
+                                    </td>
+                                    <td>Here you can add tasks to the feature of your choice using the task-creation form and the feature-list presented above the task creation form</td>
+                                </tr>
+                            </table>
+                        </>)}
+
+
+                        {activeProjects.map((project, index) => {
+
+
+                            return (<Fragment key={keysNeededForProjectsList[index]}>
+                                <ProjectView project={project} ></ProjectView></Fragment>)
+                        })}
+
                 </>
             )
 
@@ -125,7 +270,7 @@ type ProjectViewProps = {
 }
 
 function ProjectView({ project }: ProjectViewProps) {
-    const appThemeContext = useContext(themeContext);    
+    const appThemeContext = useContext(themeContext);
     const [state, dispatcher] = useReducer(FeatureReducer, project.features);
 
 
@@ -146,7 +291,7 @@ function ProjectView({ project }: ProjectViewProps) {
 
         //  }
 
-        let devTask = new Task(type, `Plan implementantation of  ${title}`, timeconstraints, developersAssigned, null, "Pending");
+        // let devTask = new Task(type, `Plan implementantation of  ${title}`, timeconstraints, developersAssigned, null, "Pending");
 
         const action = { type: "ADD_FEATURE", payload: { title: title, description: description, type: type, timeconstraints: timeconstraints, developmentTasks: [devTask], assignedDevelopers: developersAssigned } }
         dispatcher(action);
