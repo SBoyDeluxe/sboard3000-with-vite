@@ -1,0 +1,14 @@
+GET https://sboard3000-47258-default-rtdb.europe-west1.firebasedatabase.app/usernames/ HTTP/1.1
+Content-Type: "application/json"
+Accept: application/json
+
+
+{
+  "extends": "@parcel/config-default",
+  "transformers": {
+    "*.{zip,tgz}": ["@parcel/transformer-raw"],
+        "*.{ts,tsx}": ["@parcel/transformer-typescript-tsc"]
+
+  }
+}
+  "browserslist": "> 0.5%, last 2 versions, not dead",
