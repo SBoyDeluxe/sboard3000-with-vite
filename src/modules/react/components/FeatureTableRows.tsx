@@ -83,8 +83,13 @@ export function FeatureTableRows({ feature, featureIndex, handleStatusChange }: 
                <> <h6>Developers assigned to {task.description}</h6>
               <ul>{asssignedDevsListElements}</ul></>);
 
-              if(!(feature.assignedDevelopers?.filter((dev)=> task.assignedDevelopers?.includes(dev)).length == feature.assignedDevelopers?.length)){
+              if(!(feature.assignedDevelopers?.filter((featDev)=>{ 
+                //task.assignedDevelopers?.includes(dev)
+                    return task.assignedDevelopers!.filter((taskDev=> featDev.userId == taskDev.userId)).length > 0;    
+            }).length == feature.assignedDevelopers?.length)){
                devAssignmentForm = (<TaskDeveloperAssignmentForm devTaskIndex={devTaskIndex!} developmentTask={task} dispatchAction={handleStatusChange} featureDevelopers={feature.assignedDevelopers} featureIndex={featureIndex} ></TaskDeveloperAssignmentForm>)
+              }else{
+                devAssignmentForm = (<></>);
               }
 
             }
@@ -162,8 +167,13 @@ export function FeatureTableRows({ feature, featureIndex, handleStatusChange }: 
                 assignedTaskDevelopers = (
                <> <h6>Developers assigned to {task.description}</h6>
               <ul>{asssignedDevsListElements}</ul></>);
-               if(!(feature.assignedDevelopers?.filter((dev)=> task.assignedDevelopers?.includes(dev)).length == feature.assignedDevelopers?.length)){
+              if(!(feature.assignedDevelopers?.filter((featDev)=>{ 
+                //task.assignedDevelopers?.includes(dev)
+                    return task.assignedDevelopers!.filter((taskDev=> featDev.userId == taskDev.userId)).length > 0;    
+            }).length == feature.assignedDevelopers?.length)){
                devAssignmentForm = (<TaskDeveloperAssignmentForm devTaskIndex={devTaskIndex!} developmentTask={task} dispatchAction={handleStatusChange} featureDevelopers={feature.assignedDevelopers} featureIndex={featureIndex} ></TaskDeveloperAssignmentForm>)
+              }else{
+                devAssignmentForm = (<></>);
               }
 
             }
@@ -222,9 +232,9 @@ export function FeatureTableRows({ feature, featureIndex, handleStatusChange }: 
               assignedTaskDevelopers = (
                <> <h6>Developers assigned to {task.description}</h6>
               <ul>{asssignedDevsListElements}</ul></>);
-                if(!(feature.assignedDevelopers?.filter((dev)=> task.assignedDevelopers?.includes(dev)).length == feature.assignedDevelopers?.length)){
-               devAssignmentForm = (<TaskDeveloperAssignmentForm devTaskIndex={devTaskIndex!} developmentTask={task} dispatchAction={handleStatusChange} featureDevelopers={feature.assignedDevelopers} featureIndex={featureIndex} ></TaskDeveloperAssignmentForm>);
-            }
+            //     if(!(feature.assignedDevelopers?.filter((dev)=> task.assignedDevelopers?.includes(dev)).length == feature.assignedDevelopers?.length)){
+            //    devAssignmentForm = (<TaskDeveloperAssignmentForm devTaskIndex={devTaskIndex!} developmentTask={task} dispatchAction={handleStatusChange} featureDevelopers={feature.assignedDevelopers} featureIndex={featureIndex} ></TaskDeveloperAssignmentForm>);
+            // }
 
             }
 

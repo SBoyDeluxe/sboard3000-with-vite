@@ -5,9 +5,8 @@ import { FirebaseAPIClient } from './modules/firebaseapiClient.ts'
 import { BrowserRouter, Router } from 'react-router-dom'
 
 createRoot(document.getElementById('root')!).render(
-  <StrictMode>
-    <BrowserRouter>
+  
+    <BrowserRouter basename='/sboard3000-with-vite/' >
     <App firebaseClient={new FirebaseAPIClient} />
     </BrowserRouter>
-  </StrictMode>,
 )
