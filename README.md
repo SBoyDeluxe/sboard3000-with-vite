@@ -1,73 +1,28 @@
-# React + TypeScript + Vite
+# scrumboard3000
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+An imlementation of a Scrumboard, used in Agile-project methodology, leveraging a custom non-server based authentication method (No passwords stored in database, no server-based authentication -> All computationally heavy tasks are performed on user machine so as to be scalable to any number of user machines).
 
-Currently, two official plugins are available:
+- Has three types of Users : Managers, Developers and Clients
+- Manager : Reflects a project manager, can start projects where features are developed by developer teams (A specific Manager manages their developer-teams ; And can assign these to specific feature development) who are tasked with divvying up the workflow of the features into concrete tasks. The features are negoiated with a Client and assigned to a team of developers with the necessary competence profile. 
+- Developer : A developer is any User in charge of developing some feature, a developer can have an arbitrary amount of `types` (For example : "Front-end, back-end, graphics, marketing") that can be used to sort them into suitable tasks
+- Client : The Client queries the start of a specific Project and can log in to see the development of the Project as a whole or specific features at any time
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- The Manager/Developer/Client-based architecture enforces the "encapsulation of the workflow", where the competences of each user type is used as a basis for their actions inside any given project : A Manager can only start features, then the specifics of that feature and the specifics of the completion of that feature is delegated to developers with specific competence to handle that feature. A Client can at any time see how their project fares and the progression /hindrances for any wanted feature-development and can modulate their expectations given the specifics of the Project. Furthermore, the TimeConstraints used in development offers a robust way to plan out a given "sprint", in Agile-terminology and offers a way to report early completion as well as update any given timeframe or choosing to abandon some feature or sub-task inside a feature due to time-constraints inherent to the project  
 
-## React Compiler
 
-The React Compiler is currently not compatible with SWC. See [this issue](https://github.com/vitejs/vite-plugin-react/issues/428) for tracking the progress.
+- Leverages assymetric encryption methods for inter-user communication
+- Uses AES-GCM to fortify any instance against eavesdropping, manipulation or unauthorized access ; Reflecting the need of such measures in proprietary development
+- Derives new keys per log out, ensures forward-secrecy on a per login basis
+- Uses heavily fortified encryption leveraging the user-machine-based approach for robust, scalable security (Since even robust encryption-operations are only computationally/temporally challenging when needed to perform several in parallel - Usually at the server side of any web-application)
+- Actively works to minimize exposure time of any sensitive data in local memory
+-  Measures against rainbow-table attacks (In addition to standard cryptographical measures against rainbow-table attacks)
+-  Measures to ensure cryptographically secure credential generation no matter the specifics of user credential-choice
+-  Any data sent is sent over HTTPS, ensuring (reasonable, not perfect) data-security in transit to Firebase DB
+-  No local User has access to any other user´s sensitive data, thus isolating any security compromises to one specific user and not the system. Can be leveraged so that no one except the manager/client has access to any given project in its entirety, minimizing proprietary information-leakage for any project
 
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
-
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+Developments/Improvement-points : 
+- Custom server-implementation with User-specific security rules 
+- Mechanisms to spot and notify users of compromised credentials 
+- Different security profiles for projects to reflect different Project´s threat models
+- Implement actual Dev/Manager/Client role based access-structure -> In current version : All involved users count as both "managers" (can assign devs to specific tasks/features) and "developers" (Can add tasks to any feature)
+- Implement post-quantum cryptography
