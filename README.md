@@ -7,7 +7,9 @@ An imlementation of a Scrumboard, used in Agile-project methodology, leveraging 
 - Developer : A developer is any User in charge of developing some feature, a developer can have an arbitrary amount of `types` (For example : "Front-end, back-end, graphics, marketing") that can be used to sort them into suitable tasks
 - Client : The Client queries the start of a specific Project and can log in to see the development of the Project as a whole or specific features at any time
 
-- The Manager/Developer/Client-based architecture enforces the "encapsulation of the workflow", where the competences of each user type is used as a basis for their actions inside any given project : A Manager can only start features, then the specifics of that feature and the specifics of the completion of that feature is delegated to developers with specific competence to handle that feature. A Client can at any time see how their project fares and the progression /hindrances for any wanted feature-development and can modulate their expectations given the specifics of the Project. Furthermore, the TimeConstraints used in development offers a robust way to plan out a given "sprint", in Agile-terminology and offers a way to report early completion as well as update any given timeframe or choosing to abandon some feature or sub-task inside a feature due to time-constraints inherent to the project  
+- The Manager/Developer/Client-based architecture enforces the "encapsulation of the workflow", where the competences of each user type is used as a basis for their actions inside any given project : A Manager can only start features, then the specifics of that feature and the specifics of the completion of that feature is delegated to developers with specific competence to handle that feature. A Client can at any time see how their project fares and the progression /hindrances for any wanted feature-development and can modulate their expectations given the specifics of the Project. Furthermore, the TimeConstraints used in development offers a robust way to plan out a given "sprint", in Agile-terminology and offers a way to report early completion as well as update any given timeframe or choosing to abandon some feature or sub-task inside a feature due to time-constraints inherent to the project
+
+-Custom theme generation using color.js-library and a color wheel with live updating theme and 9 distinct generation settings for any given color
 
 
 - Leverages assymetric encryption methods for inter-user communication
@@ -26,3 +28,5 @@ Developments/Improvement-points :
 - Different security profiles for projects to reflect different Project´s threat models
 - Implement actual Dev/Manager/Client role based access-structure -> In current version : All involved users count as both "managers" (can assign devs to specific tasks/features) and "developers" (Can add tasks to any feature)
 - Implement post-quantum cryptography
+- Finalize project-update live checking with version hashes
+- 
