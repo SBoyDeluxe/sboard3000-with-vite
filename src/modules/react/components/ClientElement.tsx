@@ -25,8 +25,10 @@ export function ClientElement({ onRemoveClient, onSubmitClient, clientInputList 
     const participantListEmpty = clientInputList[0].userId == -1;
 
 
+
     //Used to target people from list
     const [selectedUsername, setSelectedUsername] = React.useState("");
+
 
     const initInputState = { usernameInput: "" };
     const [userInput, setUserInput] = React.useState(initInputState);
@@ -86,8 +88,18 @@ export function ClientElement({ onRemoveClient, onSubmitClient, clientInputList 
         event.preventDefault();
         event.stopPropagation();
         const userId: number = getSelectedUser()[0].userId;
+         
         onRemoveClient(selectedUsername,userId);
-        setSelectedUsername(clientInputList[0].username);
+            if(clientInputList.length == 1){
+                setSelectedUsername("")}
+            else{
+              const listWithoutRemovedUser =  clientInputList.filter((client)=>{
+                    return client.userId !== userId;
+
+                });
+                 setSelectedUsername(listWithoutRemovedUser[0].username);
+
+            } 
        
   
 

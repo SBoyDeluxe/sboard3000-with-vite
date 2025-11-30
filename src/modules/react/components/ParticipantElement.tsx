@@ -38,7 +38,7 @@ export function ParticipantElement({ onRemoveUser, onAddUserType, onRemoveUserTy
     const [selectedUsernameState, setSelectedUsernameState] = useState("");
     const [selectedUserTypes, setSelectedUserTypes] = useState([""]);
 
-
+    
 
     const participantListEmpty = participantInputList[0].userId == -1;
 
@@ -171,9 +171,22 @@ export function ParticipantElement({ onRemoveUser, onAddUserType, onRemoveUserTy
 
         event.preventDefault();
         event.stopPropagation();
+        const userId = getSelectedUser(participantInputList, selectedUsernameState).userId;
+
         //Add rinse field and set new selected username
-        onRemoveUser(selectedUsernameState, getSelectedUser(participantInputList, selectedUsernameState).userId);
-        setSelectedUsernameState(participantInputList[0].username);
+          
+
+        onRemoveUser(selectedUsernameState, userId);
+         if(participantInputList.length == 1){
+                setSelectedUsernameState("")}
+            else{
+              const listWithoutRemovedUser =  participantInputList.filter((client)=>{
+                    return client.userId !== userId;
+
+                });
+                 setSelectedUsernameState(listWithoutRemovedUser[0].username);
+
+            } 
 
     }
     function handleAddUserTypeClick(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {

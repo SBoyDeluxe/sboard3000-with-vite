@@ -324,7 +324,7 @@ export function ParticipantInputReducer(participantsState: {
             break;
         case "REMOVE_MANAGER_INPUT_DATA": {
 
-            if (participantsState.projectDevelopers.length === 1) {
+            if (participantsState.projectManagers.length === 1) {
 
                 let projectManagers: ParticipantInputData[] = getInitState().projectManagers;
                 returnState = ({
