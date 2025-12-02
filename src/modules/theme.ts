@@ -184,6 +184,7 @@ export class Theme {
 
                 }
                     break;
+                   
                 //Analogous scheme generation - Here we  use colours 45 degrees in hue over
                 case 1: {
 

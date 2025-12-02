@@ -71,14 +71,7 @@ export function ProjectsTab() {
 
 
     return (<>
-        {loadingStore ? (<>
-            <img className="loading-indicator" src='https://icons8.com/preloaders/preloaders/1480/Fidget-spinner-128.gif'>
-
-            </img>
-        </>) : (<>
-
-
-        </>)}
+      
 
         {
             activeProjects !== null && (

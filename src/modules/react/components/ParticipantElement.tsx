@@ -1,9 +1,10 @@
-import { useState, type ReactNode } from "react";
+import { useContext, useState, type ReactNode } from "react";
 import { Button } from "./Button";
 import { Input } from "./Input";
 import type { ParticipantInputData } from "./reducers/ParticipantInputReducer";
 import { getKeysForList } from "./ProjectsTab";
 import { UserStore } from "../store/UserStore";
+import { themeContext } from "../context/ThemeContext";
 
 
 
@@ -166,6 +167,9 @@ export function ParticipantElement({ onRemoveUser, onAddUserType, onRemoveUserTy
         }
 
     }
+    
+
+    
 
     function handleRemoveUserClick(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
 

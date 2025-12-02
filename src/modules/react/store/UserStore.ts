@@ -243,7 +243,7 @@ export const ProjectStore = {
     LoadingStore.updateLoading();
     try {
 
-      firebaseClient.updateProject(projectToUpdate, projectKeyObject).then((val) => {
+      await firebaseClient.updateProject(projectToUpdate, projectKeyObject).then((val) => {
 
         LoadingStore.updateLoading();
         console.log(val);

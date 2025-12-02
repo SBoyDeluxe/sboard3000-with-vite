@@ -422,7 +422,7 @@ export class FirebaseAPIClient {
         function deserializeProjectData(projectData: Project) {
             if (projectData.features !== null) {
                 projectData.features!.forEach((element, index) => {
-                    let developmentTasks = element.developmentTasks?.map((devTask) => new Task(devTask.type, devTask.description, new TimeConstraints(new Date(devTask.timeconstraints.startdate), new Date(devTask.timeconstraints.startdate)), devTask.assignedDevelopers, null, devTask.currentTaskStatus));
+                    let developmentTasks = element.developmentTasks?.map((devTask) => new Task(devTask.type, devTask.description, new TimeConstraints(new Date(devTask.timeconstraints.startdate), new Date(devTask.timeconstraints.enddate)), devTask.assignedDevelopers, null, devTask.currentTaskStatus));
                     element.developmentTasks = developmentTasks;
                 });
             }

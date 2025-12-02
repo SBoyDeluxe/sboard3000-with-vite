@@ -36,7 +36,9 @@ export function FeatureTableRows({ feature, featureIndex, handleStatusChange }: 
     const numberOfActiveTasks = activeTasks!.length;
     const numberOfCompletedTasks = completedTasks.length;
     const appThemeContext = useContext(themeContext);
-    let tableRows: ReactNode[] = [];
+
+        let tableRows: ReactNode[] = [];
+
     //let assignedDevList: ReactNode = (<></>);
     const refsForCompletedTasks = new Array(completedTasks.length);
 
@@ -178,7 +180,7 @@ export function FeatureTableRows({ feature, featureIndex, handleStatusChange }: 
 
             }
             
-
+                
             pendingdTds[index] = <td key={pendingTaskKeys[index]}><div style={{ border: `medium inset ${appThemeContext.primaryBackgroundColor} ` }}><h5>{`${task.timeconstraints.startdateString} -> ${task.timeconstraints.enddateString}`}</h5>
                 <h5>{`${task.type}`}</h5>
 
