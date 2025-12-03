@@ -188,10 +188,10 @@ export class Project {
         this.hash = CryptoUtilObject.createHash(JSON.stringify(this as Omit<Project, (ProjectKeyObject | ArrayBuffer)>));
 
 
-
-
-
-
+                          
+                  
+                  
+                  
     }
     /**Returns the totalprogress of all features, or a specific feature type
      * @param {Feature[]|null} specificFeatures : Gets the total progress of some specific feature(s) 

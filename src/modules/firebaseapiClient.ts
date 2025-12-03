@@ -422,7 +422,15 @@ export class FirebaseAPIClient {
         function deserializeProjectData(projectData: Project) {
             if (projectData.features !== null) {
                 projectData.features!.forEach((element, index) => {
-                    let developmentTasks = element.developmentTasks?.map((devTask) => new Task(devTask.type, devTask.description, new TimeConstraints(new Date(devTask.timeconstraints.startdate), new Date(devTask.timeconstraints.enddate)), devTask.assignedDevelopers, null, devTask.currentTaskStatus));
+                    let developmentTasks = element.developmentTasks?.map((devTask) => {
+                        
+                        let task = new Task(devTask.type, devTask.description, new TimeConstraints(new Date(devTask.timeconstraints.startdate), new Date(devTask.timeconstraints.enddate)), devTask.assignedDevelopers, null, devTask.currentTaskStatus);
+                        if(devTask.currentTaskStatus == "Completed" && devTask.timeconstraints.completionDate !== null){
+                            task.timeconstraints.completionDate = new Date(devTask.timeconstraints.completionDate);
+                        }
+
+                        return task;
+                    });
                     element.developmentTasks = developmentTasks;
                 });
             }
@@ -519,9 +527,25 @@ export class FirebaseAPIClient {
 
         function deserializeProjectData(projectData: Project) {
 
-           let features = projectData.features?.map((feature)=>new Feature(feature.title, feature.type, feature.description, feature.timeconstraints, feature.developmentTasks?.map((task)=>new Task(task.type, task.description, task.timeconstraints, task.assignedDevelopers, task.taskGoals, task.currentTaskStatus))!, feature.assignedDevelopers?.map((dev)=>new Developer(dev.userId, dev.username, dev.developerType))!));
-           const projectFeatures = (features === undefined) ? null : features;
-            let deserializedProject = new Project(projectData.title, projectData.managerTeam, projectData.clients,projectFeatures, projectData.developerTeam, projectData.description, projectData.timeconstraints);
+             if (projectData.features !== null) {
+                projectData.features!.forEach((element, index) => {
+                    let developmentTasks = element.developmentTasks?.map((devTask) => {
+                        
+                        let task = new Task(devTask.type, devTask.description, new TimeConstraints(new Date(devTask.timeconstraints.startdate), new Date(devTask.timeconstraints.enddate)), devTask.assignedDevelopers, null, devTask.currentTaskStatus);
+                      if(devTask.currentTaskStatus == "Completed" && devTask.timeconstraints.completionDate !== null){
+                            task.timeconstraints.completionDate = new Date(devTask.timeconstraints.completionDate);
+                        }
+
+                        return task;
+                    });
+                    element.developmentTasks = developmentTasks;
+                });
+            }
+            let features = (projectData.features !== null) ? projectData.features?.map((feature) => new Feature(feature.title, feature.type, feature.description, new TimeConstraints(feature.timeconstraints.startdate, feature.timeconstraints.enddate), feature.developmentTasks!, feature.assignedDevelopers)) : null;
+
+            const timeConstraintsProject = new TimeConstraints(projectData.timeconstraints.startdate, projectData.timeconstraints.enddate)
+
+            let deserializedProject = new Project(projectData.title, projectData.managerTeam, projectData.clients, features, projectData.developerTeam, projectData.description, projectData.timeconstraints);
             return deserializedProject;
         }
     }

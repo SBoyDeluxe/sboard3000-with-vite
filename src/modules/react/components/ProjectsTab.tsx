@@ -310,7 +310,6 @@ function ProjectView({ project }: ProjectViewProps) {
 
         const startDate = Date.parse(timeConstraints.startdate);
         const endDate = Date.parse(timeConstraints.enddate);
-        timeConstraints.getTimePassedFraction
 
         const currentDate = Date.now();
 
